@@ -1,0 +1,30 @@
+{
+  "name": "einsamkeit",
+  "version": "1.0.0",
+  "description": "An lightweight, single-user ActivityPub implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kb10uy/einsamkeit.git"
+  },
+  "keywords": [
+    "ActivityPub"
+  ],
+  "author": "kb10uy <kb10uy@kb10uy.org>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kb10uy/einsamkeit/issues"
+  },
+  "homepage": "https://github.com/kb10uy/einsamkeit#readme",
+  "dependencies": {
+    "prettier": "^1.14.2",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.14.0",
+    "tslint-plugin-prettier": "^1.3.0",
+    "typescript": "^3.0.1"
+  }
+}

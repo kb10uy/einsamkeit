@@ -19,7 +19,8 @@
   "scripts": {
     "precommit": "lint-staged",
     "lint": "tslint -c ./tslint.json -p ./ --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server:serve": "ts-node -P ./tsconfig.json ./src/index.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

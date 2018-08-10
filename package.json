@@ -5,10 +5,10 @@
   "author": "kb10uy <kb10uy@kb10uy.org>",
   "homepage": "https://einsamkeit.kb10uy.org",
   "license": "ISC",
-
   "main": "index.js",
-  "keywords": ["ActivityPub"],
-
+  "keywords": [
+    "ActivityPub"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kb10uy/einsamkeit.git"
@@ -16,10 +16,9 @@
   "bugs": {
     "url": "https://github.com/kb10uy/einsamkeit/issues"
   },
-
-
   "scripts": {
     "precommit": "lint-staged",
+    "lint": "tslint -c ./tslint.json -p ./ --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "lint-staged": {
@@ -28,6 +27,15 @@
     ]
   },
   "dependencies": {
+    "@types/knex": "^0.14.20",
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.1",
+    "@types/koa-router": "^7.0.31",
+    "knex": "^0.15.2",
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "pg": "^7.4.3",
     "ts-node": "^7.0.0",
     "typescript": "^3.0.1"
   },

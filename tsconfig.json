@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["es2018"],
+    "moduleResolution": "node",
+    "module": "commonjs"
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./test/**/*.ts",
+    "./db/**/*.ts",
+    "./config/*.ts"
+  ]
+}

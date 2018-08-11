@@ -2,7 +2,7 @@ import * as url from 'url';
 import * as config from 'config';
 import endpoints from '../api/endpoints';
 import { IAdminConfigObject } from '../../config/types';
-import { makeActivityStreamObject, makeImageObject } from './activity-streams';
+import { makeObject, makeImageObject } from './activity-streams';
 
 const scheme: string = config.get('server.scheme');
 const domain: string = config.get('server.domain');
@@ -19,7 +19,7 @@ export function getActorById(userId: string) {
     return null;
   }
   return {
-    ...makeActivityStreamObject(),
+    ...makeObject(),
     // Required
     type: 'Person',
     id: url.resolve(origin, endpoints.admin.me),

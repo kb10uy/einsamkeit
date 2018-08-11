@@ -3,4 +3,6 @@ export interface IAdminConfigObject {
   name: string;
   summary: string;
   icon: string;
+  publicKey: string;
+  privateKey: string;
 }

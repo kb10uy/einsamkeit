@@ -17,6 +17,7 @@
     "url": "https://github.com/kb10uy/einsamkeit/issues"
   },
   "scripts": {
+    "compile": "tsc",
     "precommit": "lint-staged",
     "lint": "tslint -c ./tslint.json -p ./ --fix",
     "test": "echo \"Error: no test specified\" && exit 1",

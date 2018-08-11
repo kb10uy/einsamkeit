@@ -15,7 +15,7 @@ export function me(ctx: Context) {
   const accepts = ctx.request.accepts(['application/activity+json', 'text/html']);
   if (accepts === 'application/activity+json') {
     ctx.status = 200;
-    ctx.body = ctx.request.header.accept;
+    ctx.body = getActorById(admin.id);
   } else {
     ctx.status = 200;
     ctx.body = 'Not Implemented';

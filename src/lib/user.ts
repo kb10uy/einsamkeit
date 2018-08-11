@@ -33,6 +33,6 @@ export function getActorById(userId: string) {
     preferredName: admin.id,
     name: admin.name,
     summary: admin.summary,
-    icon: url.resolve(origin, admin.icon),
+    icon: admin.icon,
   };
 }

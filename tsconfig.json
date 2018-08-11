@@ -4,6 +4,13 @@
     "lib": ["es2018"],
     "moduleResolution": "node",
     "module": "commonjs",
+    "baseUrl": "./",
+    "paths": {
+      "@config*": ["./config*"],
+      "@api*": ["./src/api*"],
+      "@lib*": ["./src/lib*"],
+      "@main*": ["./src/*"],
+    },
     "outDir": "./dist/",
   },
   "include": [

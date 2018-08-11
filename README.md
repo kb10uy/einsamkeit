@@ -1,4 +1,4 @@
-# einsamkeit
+# Einsamkeit <small>(/ˈaɪnzaːmkaɪt/ 孤独)</small>
 A lazy ActivityPub Implementation. For single-user, with Node.js.
 
 ## 特徴

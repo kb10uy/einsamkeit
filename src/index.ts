@@ -12,7 +12,13 @@ const application = new Koa();
 const router = new KoaRouter();
 defineRoutes(router);
 
-application.use(KoaBodyParser());
+application.use(
+  KoaBodyParser({
+    extendTypes: {
+      json: ['application/activity+json'],
+    },
+  }),
+);
 application.use(router.routes());
 application.use(router.allowedMethods());
 application.listen(serverConfig.listen);

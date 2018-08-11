@@ -24,6 +24,6 @@ export function me(ctx: Context, next: () => Promise<any>) {
  * @param ctx context
  */
 export function acceptInbox(ctx: Context) {
-  logger.info(ctx.request.rawBody);
+  logger.info(ctx.request.body);
   ctx.status = 404;
 }

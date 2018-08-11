@@ -4,6 +4,7 @@ import * as url from 'url';
 import * as config from 'config';
 import { Context } from 'koa';
 import * as xmljs from 'xml-js';
+import endpoints from './endpoints';
 
 const scheme: string = config.get('server.scheme');
 const domain: string = config.get('server.domain');
@@ -65,5 +66,15 @@ export function returnWebFinger(ctx: Context) {
  * @param user ユーザーid(いわゆるscreenName)
  */
 function makeWebFingerByUser(user: string) {
-  return {};
+  return {
+    subject: `acct:${user}@${origin}`,
+    aliases: [origin],
+    links: [
+      {
+        rel: 'self',
+        type: 'application/activity+json',
+        href: url.resolve(origin, endpoints.admin.me),
+      },
+    ],
+  };
 }

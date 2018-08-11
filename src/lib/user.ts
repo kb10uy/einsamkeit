@@ -1,11 +1,12 @@
 import * as url from 'url';
 import * as config from 'config';
 import endpoints from '../api/endpoints';
+import { IAdminConfigObject } from '../../config/types';
 
 const scheme: string = config.get('server.scheme');
 const domain: string = config.get('server.domain');
 const origin: string = `${scheme}://${domain}`;
-const admin: any = config.get('admin');
+const admin = config.get<IAdminConfigObject>('admin');
 
 /**
  * ユーザーIDから Actor Object を取得する

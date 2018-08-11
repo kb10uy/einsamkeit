@@ -18,3 +18,4 @@ jspm_packages/
 .env
 .*.env
 /config/*.json
+/dist

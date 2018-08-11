@@ -2,6 +2,7 @@ import * as url from 'url';
 import * as config from 'config';
 import endpoints from '../api/endpoints';
 import { IAdminConfigObject } from '../../config/types';
+import { makeActivityStreamObject, makeImageObject } from './activity-streams';
 
 const scheme: string = config.get('server.scheme');
 const domain: string = config.get('server.domain');
@@ -18,6 +19,7 @@ export function getActorById(userId: string) {
     return null;
   }
   return {
+    ...makeActivityStreamObject(),
     // Required
     type: 'Person',
     id: url.resolve(origin, endpoints.admin.me),
@@ -30,9 +32,10 @@ export function getActorById(userId: string) {
     liked: url.resolve(origin, endpoints.admin.liked),
 
     // Optional
-    preferredName: admin.id,
+    preferredUsername: admin.id,
     name: admin.name,
     summary: admin.summary,
-    icon: admin.icon,
+    url: url.resolve(origin, endpoints.web.root),
+    icon: makeImageObject('Admin Icon', admin.icon),
   };
 }

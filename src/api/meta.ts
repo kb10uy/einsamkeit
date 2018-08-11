@@ -48,7 +48,6 @@ export function returnWebFinger(ctx: Context, next: () => Promise<any>) {
   if (acctResult) {
     ctx.status = 200;
     ctx.body = makeWebFingerByUser(acctResult[1]);
-    next();
     return;
   }
 
@@ -56,12 +55,10 @@ export function returnWebFinger(ctx: Context, next: () => Promise<any>) {
   if (httpResult) {
     ctx.status = 200;
     ctx.body = makeWebFingerByUser(httpResult[1]);
-    next();
     return;
   }
 
   ctx.status = 404;
-  next();
 }
 
 /**
@@ -70,7 +67,7 @@ export function returnWebFinger(ctx: Context, next: () => Promise<any>) {
  */
 function makeWebFingerByUser(user: string) {
   return {
-    subject: `acct:${user}@${origin}`,
+    subject: `acct:${user}@${domain}`,
     aliases: [origin],
     links: [
       {

@@ -4,11 +4,14 @@ export default {
     webFinger: '/.well-known/webfinger',
   },
   admin: {
-    me: '/',
+    me: '/api/me',
     inbox: '/api/inbox',
     outbox: '/api/outbox',
     following: '/api/following',
     followers: '/api/followers',
     liked: '/api/liked',
+  },
+  web: {
+    root: '/',
   },
 };

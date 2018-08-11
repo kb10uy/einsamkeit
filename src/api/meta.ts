@@ -14,11 +14,11 @@ const origin: string = `${scheme}://${domain}`;
  * /.well-known/host-meta に対するレスポンス
  * @param ctx context
  */
-export function returnHostMeta(ctx: Context) {
+export function returnHostMeta(ctx: Context, next: () => Promise<any>) {
   const result: xmljs.ElementCompact = {
     _declaration: {
       _attributes: {
-        version: 1.0,
+        version: '1.0',
         encoding: 'utf-8',
       },
     },
@@ -33,21 +33,22 @@ export function returnHostMeta(ctx: Context) {
       },
     },
   };
-
+  ctx.body = xmljs.js2xml(result, { compact: true });
   ctx.status = 200;
-  ctx.body = xmljs.js2xml(result);
+  ctx.type = 'application/xml';
 }
 
 /**
  * WebFinger レスポンス
  */
-export function returnWebFinger(ctx: Context) {
+export function returnWebFinger(ctx: Context, next: () => Promise<any>) {
   const subject: string = String(ctx.query.resource || '');
 
   const acctResult = new RegExp(`acct:([a-zA-Z0-9_]{1,64})@${domain}`).exec(subject);
   if (acctResult) {
     ctx.status = 200;
     ctx.body = makeWebFingerByUser(acctResult[1]);
+    next();
     return;
   }
 
@@ -55,10 +56,12 @@ export function returnWebFinger(ctx: Context) {
   if (httpResult) {
     ctx.status = 200;
     ctx.body = makeWebFingerByUser(httpResult[1]);
+    next();
     return;
   }
 
   ctx.status = 404;
+  next();
 }
 
 /**

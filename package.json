@@ -20,7 +20,8 @@
     "precommit": "lint-staged",
     "lint": "tslint -c ./tslint.json -p ./ --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server:serve": "ts-node -P ./tsconfig.json ./src/index.ts"
+    "server:serve": "ts-node -P ./tsconfig.json ./src/index.ts",
+    "server:production": "cross-env NODE_ENV=production ts-node -P ./tsconfig.json ./src/index.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -37,6 +38,7 @@
     "@types/node": "^10.5.7",
     "@types/uuid": "^3.4.3",
     "config": "^2.0.1",
+    "cross-env": "^5.2.0",
     "knex": "^0.15.2",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",

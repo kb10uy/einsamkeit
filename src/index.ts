@@ -3,7 +3,8 @@ import * as config from 'config';
 import * as Koa from 'koa';
 import * as KoaBodyParser from 'koa-bodyparser';
 import * as KoaRouter from 'koa-router';
-import defineRoutes from './routes';
+import defineRoutes from '@main/routes';
+
 const serverConfig: any = config.get('server');
 const logger = getLogger('Server');
 logger.level = 'info';

@@ -1,8 +1,8 @@
 import * as url from 'url';
 import * as config from 'config';
-import endpoints from '../api/endpoints';
-import { IAdminConfigObject } from '../../config/types';
-import { makeObject, makeImageObject } from './activity-streams';
+import endpoints from '@api/endpoints';
+import { IAdminConfigObject } from '@config/types';
+import { makeObject, makeImageObject } from '@lib/activity-streams';
 
 const scheme: string = config.get('server.scheme');
 const domain: string = config.get('server.domain');

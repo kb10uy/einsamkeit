@@ -4,7 +4,7 @@ import * as url from 'url';
 import * as config from 'config';
 import { Context } from 'koa';
 import * as xmljs from 'xml-js';
-import endpoints from './endpoints';
+import endpoints from '@api/endpoints';
 
 const scheme: string = config.get('server.scheme');
 const domain: string = config.get('server.domain');

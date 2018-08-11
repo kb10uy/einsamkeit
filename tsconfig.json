@@ -9,7 +9,7 @@
       "@config*": ["./config*"],
       "@api*": ["./src/api*"],
       "@lib*": ["./src/lib*"],
-      "@main*": ["./src/*"],
+      "@main*": ["./src*"],
     },
     "outDir": "./dist/",
   },

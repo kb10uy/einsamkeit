@@ -1,9 +1,9 @@
 import * as config from 'config';
 import { getLogger } from 'log4js';
 import { Context } from 'koa';
-import { getActorById } from '../lib/user';
-import { IAdminConfigObject } from '../../config/types';
-import { checkContext } from '../lib/activity-streams';
+import { getActorById } from '@lib/user';
+import { IAdminConfigObject } from '@config/types';
+import { checkContext } from '@lib/activity-streams';
 
 const logger = getLogger('User');
 logger.level = 'info';

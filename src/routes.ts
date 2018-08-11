@@ -11,4 +11,5 @@ export default function defineRoutes(router: KoaRouter) {
 
   // user objects
   router.get(endpoints.admin.me, apiUser.me);
+  router.post(endpoints.admin.inbox, apiUser.acceptInbox);
 }

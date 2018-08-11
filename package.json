@@ -36,6 +36,7 @@
     "@types/koa-router": "^7.0.31",
     "@types/log4js": "^2.3.5",
     "@types/node": "^10.5.7",
+    "@types/uuid": "^3.4.3",
     "config": "^2.0.1",
     "dotenv": "^6.0.0",
     "knex": "^0.15.2",
@@ -46,6 +47,7 @@
     "pg": "^7.4.3",
     "ts-node": "^7.0.0",
     "typescript": "^3.0.1",
+    "uuid": "^3.3.2",
     "xml-js": "^1.6.7"
   },
   "devDependencies": {

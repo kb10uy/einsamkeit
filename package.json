@@ -20,7 +20,8 @@
     "precommit": "lint-staged",
     "lint": "tslint -c ./tslint.json -p ./ --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server:serve": "ts-node -P ./tsconfig.json ./src/index.ts"
+    "server:serve": "ts-node -P ./tsconfig.json ./src/index.ts",
+    "server:production": "cross-env NODE_ENV=production ts-node -P ./tsconfig.json ./src/index.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -29,15 +30,15 @@
   },
   "dependencies": {
     "@types/config": "0.0.34",
-    "@types/dotenv": "^4.0.3",
     "@types/knex": "^0.14.20",
     "@types/koa": "^2.0.46",
     "@types/koa-bodyparser": "^5.0.1",
     "@types/koa-router": "^7.0.31",
     "@types/log4js": "^2.3.5",
     "@types/node": "^10.5.7",
+    "@types/uuid": "^3.4.3",
     "config": "^2.0.1",
-    "dotenv": "^6.0.0",
+    "cross-env": "^5.2.0",
     "knex": "^0.15.2",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
@@ -45,7 +46,9 @@
     "log4js": "^3.0.4",
     "pg": "^7.4.3",
     "ts-node": "^7.0.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.0.1",
+    "uuid": "^3.3.2",
+    "xml-js": "^1.6.7"
   },
   "devDependencies": {
     "prettier": "^1.14.2",

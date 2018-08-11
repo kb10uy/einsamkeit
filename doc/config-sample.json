@@ -1,0 +1,19 @@
+{
+  "database": {
+    "host": "your.db.host",
+    "database": "einsamkeit",
+    "user": "einsamkeit",
+    "password": "super-secret-password"
+  },
+  "server": {
+    "listen": 3000,
+    "scheme": "https",
+    "domain": "example.com"
+  },
+  "admin": {
+    "id": "john_doe",
+    "name": "John Doe",
+    "summary": "An Einsamkeit user",
+    "icon": "https:/example.com/icon.jpg"
+  }
+}

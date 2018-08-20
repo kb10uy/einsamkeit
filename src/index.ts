@@ -16,7 +16,7 @@ defineRoutes(router);
 application.use(
   KoaBodyParser({
     extendTypes: {
-      json: ['application/activity+json'],
+      json: ['application/activity+json', 'application/ld+json'],
     },
   }),
 );

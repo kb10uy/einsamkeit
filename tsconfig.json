@@ -4,6 +4,7 @@
     "lib": ["es2018"],
     "moduleResolution": "node",
     "module": "commonjs",
+    "target": "es2015",
     "baseUrl": "./",
     "paths": {
       "@config*": ["./config*"],

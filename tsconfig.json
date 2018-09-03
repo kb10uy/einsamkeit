@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "allowJs": false,
     "lib": ["es2018"],
     "moduleResolution": "node",
     "module": "commonjs",

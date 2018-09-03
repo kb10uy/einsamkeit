@@ -1,12 +1,15 @@
+import * as path from 'path';
 import * as Pug from 'pug';
 
 export default class PugCache {
   private options: Pug.Options;
+  private templateDirectory: string;
   private globals: any;
   private renderFunctions: { [x: string]: Pug.compileTemplate };
 
   public constructor(options: Pug.Options, globals: any = {}) {
     this.options = options;
+    this.templateDirectory = options.basedir || '';
     this.renderFunctions = {};
     this.globals = globals;
   }
@@ -26,7 +29,7 @@ export default class PugCache {
 
   private makeSureRenderFunction(filename: string) {
     if (!this.renderFunctions[filename]) {
-      const renderFunction = Pug.compileFile(filename, this.options);
+      const renderFunction = Pug.compileFile(path.resolve(this.templateDirectory, filename), this.options);
       this.renderFunctions[filename] = renderFunction;
     }
   }

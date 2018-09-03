@@ -18,8 +18,8 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "server:dev:web": "ts-node -P ./tsconfig.json ./src/index.ts",
-    "server:prod:web": "cross-env NODE_ENV=production node ./dist/server/src/index.js",
+    "server:dev:web": "ts-node -P ./tsconfig.json -r tsconfig-paths/register ./src/index.ts",
+    "server:prod:web": "cross-env NODE_ENV=production node -r tsconfig-paths/register ./dist/server/src/index.js",
     "server:build": "tsc",
     "server:lint": "tslint -c ./tslint.json -p ./ --fix",
     "server:test": "echo \"Error: no test specified\" && exit 1",
@@ -45,6 +45,7 @@
     "log4js": "^3.0.4",
     "pg": "^7.4.3",
     "pug": "^2.0.3",
+    "tsconfig-paths": "^3.5.0",
     "uuid": "^3.3.2",
     "xml-js": "^1.6.7"
   },

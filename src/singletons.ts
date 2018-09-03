@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as config from 'config';
 import PugCache from '@lib/pug-cache';
 
 const currentDirectory = process.cwd();
@@ -19,5 +20,6 @@ export const pugCache: PugCache = new PugCache(
   {
     scriptBundlePath: clientManifest['script.js'],
     styleBundlePath: clientManifest['style.css'],
+    config: config.get('client'),
   },
 );

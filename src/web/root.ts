@@ -8,5 +8,6 @@ import { pugCache } from '@main/singletons';
  */
 export function index(ctx: Context) {
   ctx.type = 'html';
-  pugCache.render('index.pug');
+  ctx.status = 200;
+  ctx.body = pugCache.render('index.pug', {});
 }

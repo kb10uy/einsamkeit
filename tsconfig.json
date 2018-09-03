@@ -10,15 +10,13 @@
     "paths": {
       "@config*": ["./config*"],
       "@api*": ["./src/api*"],
+      "@web*": ["./src/web*"],
       "@lib*": ["./src/lib*"],
       "@main*": ["./src*"],
     },
-    "outDir": "./dist/",
+    "outDir": "./dist/server",
   },
   "include": [
-    "./src/**/*.ts",
-    "./test/**/*.ts",
-    "./db/**/*.ts",
-    "./config/*.ts"
+    "./src/**/*.ts"
   ]
 }

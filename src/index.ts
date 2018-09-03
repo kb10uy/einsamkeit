@@ -1,10 +1,13 @@
+import * as path from 'path';
 import { getLogger } from 'log4js';
 import * as config from 'config';
 import * as Koa from 'koa';
 import * as KoaBodyParser from 'koa-bodyparser';
 import * as KoaRouter from 'koa-router';
+import * as KoaStatic from 'koa-static';
 import defineRoutes from '@main/routes';
 
+const currentDirectory = process.cwd();
 const serverConfig: any = config.get('server');
 const logger = getLogger('Server');
 logger.level = 'info';
@@ -22,5 +25,6 @@ application.use(
 );
 application.use(router.routes());
 application.use(router.allowedMethods());
+application.use(KoaStatic(path.resolve(currentDirectory, 'dist/public')));
 application.listen(serverConfig.listen);
 logger.info(`Listen on ${serverConfig.listen}`);

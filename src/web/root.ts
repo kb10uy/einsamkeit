@@ -1,5 +1,4 @@
 import { Context } from 'koa';
-import * as Pug from 'pug';
 import { pugCache } from '@main/singletons';
 
 /**

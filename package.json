@@ -31,6 +31,9 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "tslint -c ./tslint.json --fix"
+    ],
+    "*.scss": [
+      "stylelint --fix"
     ]
   },
   "dependencies": {
@@ -72,6 +75,9 @@
     "postcss-loader": "^3.0.0",
     "prettier": "^1.14.2",
     "sass-loader": "^7.1.0",
+    "stylelint": "^9.5.0",
+    "stylelint-config-recess-order": "^2.0.0",
+    "stylelint-config-standard": "^18.2.0",
     "ts-loader": "^4.5.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",

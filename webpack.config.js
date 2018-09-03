@@ -2,16 +2,19 @@ const webpack = require('webpack');
 const path = require('path');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const AutoPrefixer = require('autoprefixer');
+
+const publicDirectory = path.resolve(__dirname, 'dist/public');
 
 module.exports = {
   entry: {
-    script: './assets/script/main.ts',
-    style: './assets/style/main.scss',
+    script: './assets/scripts/main.ts',
+    style: './assets/styles/main.scss',
   },
   output: {
-    path: path.resolve(__dirname, 'dist/public'),
-    filename: '[chunkhash].js',
+    path: publicDirectory,
+    filename: '[hash].js',
   },
   module: {
     rules: [
@@ -42,5 +45,13 @@ module.exports = {
       },
     ],
   },
-  plugins: [new MiniCssExtractPlugin()],
+  plugins: [
+    new MiniCssExtractPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: './assets/static',
+        to: publicDirectory,
+      },
+    ]),
+  ],
 };

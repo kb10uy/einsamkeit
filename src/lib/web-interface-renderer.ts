@@ -98,14 +98,13 @@ export default class WebInterfaceRenderer {
    */
   private async onManifestChanged() {
     try {
-      const buffer = await promisify(fs.readFile)(this.manifestPath);
+      const buffer = fs.readFileSync(this.manifestPath);
       const manifest = JSON.parse(buffer.toString());
       this.manifestScriptPath = manifest['script.js'];
       this.manifestStylePath = manifest['style.css'];
-
       logger.info('manifest.json was updated and reloaded');
     } catch (ex) {
-      logger.error('manifest.json was not found or invalid');
+      // logger.error('manifest.json was not found or invalid');
     }
   }
 }

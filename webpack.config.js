@@ -4,7 +4,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const WebpackCleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const AutoPrefixer = require('autoprefixer');
 
 const publicDirectory = path.resolve(__dirname, 'dist/public');
@@ -48,9 +48,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist/public/*.js', './dist/public/*.css'], {
-      watch: true,
-    }),
+    new WebpackCleanObsoleteChunks(),
     new MiniCssExtractPlugin({
       filename: '[hash].css',
     }),

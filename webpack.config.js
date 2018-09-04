@@ -48,7 +48,9 @@ module.exports = {
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist/public/*.js', './dist/public/*.css']),
+    new CleanWebpackPlugin(['./dist/public/*.js', './dist/public/*.css'], {
+      watch: true,
+    }),
     new MiniCssExtractPlugin({
       filename: '[hash].css',
     }),

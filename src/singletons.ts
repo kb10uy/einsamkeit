@@ -7,3 +7,5 @@ export const webRenderer = new WebInterfaceRenderer(
   path.resolve(currentDirectory, 'dist/manifest.json'),
   path.resolve(currentDirectory, 'assets/views'),
 );
+
+webRenderer.initialize();

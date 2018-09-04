@@ -1,16 +1,15 @@
 import * as path from 'path';
-import { getLogger } from 'log4js';
 import * as config from 'config';
 import * as Koa from 'koa';
 import * as KoaBodyParser from 'koa-bodyparser';
 import * as KoaRouter from 'koa-router';
 import * as KoaStatic from 'koa-static';
 import defineRoutes from '@main/routes';
+import { createLogger } from '@lib/utility';
 
 const currentDirectory = process.cwd();
 const serverConfig: any = config.get('server');
-const logger = getLogger('Server');
-logger.level = 'info';
+const logger = createLogger('Server');
 
 const application = new Koa();
 const router = new KoaRouter();

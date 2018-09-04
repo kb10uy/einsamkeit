@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { pugCache } from '@main/singletons';
+import { webRenderer } from '@main/singletons';
 
 /**
  * トップページ
@@ -8,5 +8,5 @@ import { pugCache } from '@main/singletons';
 export function index(ctx: Context) {
   ctx.type = 'html';
   ctx.status = 200;
-  ctx.body = pugCache.render('index.pug', {});
+  ctx.body = webRenderer.render('index.pug', {});
 }

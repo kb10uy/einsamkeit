@@ -24,6 +24,7 @@
     "server:lint": "tslint -c ./tslint.json -p ./ --fix",
     "server:test": "echo \"Error: no test specified\" && exit 1",
     "client:build:dev": "webpack --mode development",
+    "client:build:watch": "webpack --mode development --watch",
     "client:build:prod": "webpack --mode production",
     "db:migrate:make": "knex migrate:make",
     "db:migrate": "knex migrate:latest"

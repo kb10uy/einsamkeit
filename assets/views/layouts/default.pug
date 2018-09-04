@@ -1,12 +1,18 @@
-<!DOCTYPE html>
+doctype html
 html(lang=config.lang)
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     meta(name="description", content=config.description)
-    script(src=scriptBundlePath)
+
+    include ./_styles.pug
     link(rel="stylesheet", href=styleBundlePath)
+
+    include ./_scripts.pug
+    script(src=scriptBundlePath)
+
     title #{config.serverName}
   body
+    include ../components/header.pug
     block body

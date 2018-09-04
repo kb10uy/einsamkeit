@@ -1,4 +1,20 @@
+@import "./setting";
+
 body {
   margin: 0;
   color: #000;
+}
+
+.header {
+  position: sticky;
+  display: grid;
+  grid-template-columns: 1fr min-content 1fr;
+  width: 100vw;
+  height: 32px;
+
+  .logo {
+    grid-column: 2;
+    align-self: center;
+    font-family: $logo-font-family;
+  }
 }

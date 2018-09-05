@@ -21,3 +21,4 @@ jspm_packages/
 /dist
 /public
 /build
+/docker/postgres/data

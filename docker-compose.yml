@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: 'postgres:10'
+    environment:
+      POSTGRES_USER: 'einsamkeit'
+      POSTGRES_PASSWORD: 'loneliness'
+    volumes:
+      - './docker/postgres/data:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'

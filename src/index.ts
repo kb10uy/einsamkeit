@@ -20,9 +20,6 @@ run();
 
 async function run() {
   if (isDevelopment) {
-    const KoaWebpack = await import('koa-webpack');
-    const koaWebpack = await KoaWebpack();
-    application.use(koaWebpack);
     application.use(KoaStatic(path.resolve(currentDirectory, 'dist/public')));
   }
 

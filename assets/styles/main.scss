@@ -1,4 +1,4 @@
-@import "./setting";
+@import './setting';
 
 body {
   margin: 0;
@@ -7,10 +7,34 @@ body {
 
 .header {
   position: sticky;
+  top: 0;
   display: grid;
-  grid-template-rows: max-content;
+  grid-template-rows: max-content 1px;
   grid-template-columns: 1fr min-content 1fr;
   width: 100vw;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 1) 25%,
+    rgba(255, 255, 255, 1) 75%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+
+  &::after {
+    display: block;
+    grid-row: 2;
+    grid-column: 1 / 4;
+    width: 100%;
+    height: 1px;
+    content: '';
+    background: linear-gradient(
+      90deg,
+      rgba(221, 221, 221, 0) 0%,
+      rgba(221, 221, 221, 1) 25%,
+      rgba(221, 221, 221, 1) 75%,
+      rgba(221, 221, 221, 0) 100%
+    );
+  }
 
   .logo {
     grid-column: 2;
@@ -19,4 +43,9 @@ body {
     font-family: $logo-font-family;
     font-size: 18pt;
   }
+}
+
+.body {
+  max-width: 1024px;
+  margin: 0 auto;
 }

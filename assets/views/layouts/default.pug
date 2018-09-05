@@ -5,6 +5,7 @@ html(lang=config.lang)
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     meta(name="description", content=config.description)
+    link(rel="icon", href="/einsamkeit.png", type="image/png")
 
     include ./_styles.pug
     link(rel="stylesheet", href=styleBundlePath)
@@ -15,4 +16,5 @@ html(lang=config.lang)
     title #{config.serverName}
   body
     include ../components/header.pug
-    block body
+    .body
+      block body

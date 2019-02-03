@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/config": "0.0.34",
+    "config": "^3.0.1",
+    "knex": "^0.16.3",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"
   },
@@ -17,6 +20,7 @@
     "@typescript-eslint/parser": "^1.2.0",
     "@typescript-eslint/typescript-estree": "^1.2.0",
     "autoprefixer": "^9.4.7",
+    "cac": "^6.4.2",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^2.1.0",
     "eslint": "^5.13.0",

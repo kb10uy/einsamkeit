@@ -3,12 +3,6 @@ import { Config, MigratorConfig, ConnectionConfig } from 'knex';
 
 const client = 'pg';
 
-const migrations: MigratorConfig = {
-  directory: 'db/migrations',
-  // @ts-ignore
-  stub: 'db/template.ts',
-};
-
 const connection: ConnectionConfig = {
   host: config.get('database.host'),
   database: config.get('database.database'),
@@ -16,8 +10,14 @@ const connection: ConnectionConfig = {
   password: config.get('database.password'),
 };
 
+export const knexConfigMigrations: MigratorConfig = {
+  directory: './db/migrations',
+  // @ts-ignore
+  stub: 'db/template.ts',
+};
+
 export const knexConfigDevelopment: Config = {
   client,
   connection,
-  migrations,
+  migrations: knexConfigMigrations,
 };

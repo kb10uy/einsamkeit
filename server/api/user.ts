@@ -4,6 +4,11 @@ import { makeASRoot } from '../ap/activitystreams';
 
 const logger = getLogger();
 
+/**
+ * 存在しないユーザーの場合は 404 を返す
+ * @param context context
+ * @param next next
+ */
 export async function checkUser(context: EinsamkeitContext, next: () => Promise<void>): Promise<void> {
   const knex = getKnex();
   const username = context.params.user;
@@ -19,6 +24,10 @@ export async function checkUser(context: EinsamkeitContext, next: () => Promise<
   }
 }
 
+/**
+ * ユーザーページ
+ * @param context context
+ */
 export async function user(context: EinsamkeitContext): Promise<void> {
   const user = context.state.user;
   if (!user) throw new Error('Precondition failed');
@@ -43,12 +52,20 @@ export async function user(context: EinsamkeitContext): Promise<void> {
   });
 }
 
+/**
+ * inbox
+ * @param context context
+ */
 export async function inbox(context: EinsamkeitContext): Promise<void> {
   const body = context.request.body;
   logger.info(`received: ${JSON.stringify(body)}`);
   setSuccess(context, 200, {});
 }
 
+/**
+ * outbox
+ * @param context context
+ */
 export async function outbox(context: EinsamkeitContext): Promise<void> {
   setSuccess(context, 200, {});
 }

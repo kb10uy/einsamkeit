@@ -5,7 +5,7 @@ import * as config from 'config';
 import * as Knex from 'knex';
 import { URL } from 'url';
 
-const server: any = config.get('server');
+const server = config.get<any>('server');
 const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
 let logger: log4js.Logger;
 let knex: Knex;
@@ -60,6 +60,10 @@ export function setError(ctx: ParameterizedContext<EinsamkeitState>, status: num
   ctx.response.body = body;
 }
 
+/**
+ * このサーバーのフルURLを生成する
+ * @param path パス
+ */
 export function resolveLocalUrl(path: string): string {
   return new URL(path, urlRoot).toString();
 }

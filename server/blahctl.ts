@@ -3,6 +3,12 @@ import { promisify } from 'util';
 import * as cac from 'cac';
 import { getLogger, getKnex } from './util';
 
+/**
+ * 新規ユーザーを追加する
+ * @param username ユーザー名
+ * @param publicKeyFilename RSA 公開鍵のファイル名
+ * @param privateKeyFilename RSA 秘密鍵のファイル名
+ */
 async function addUser(username: string, publicKeyFilename: string, privateKeyFilename: string): Promise<void> {
   const logger = getLogger();
   const knex = getKnex();

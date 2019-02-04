@@ -6,10 +6,18 @@ const server: any = config.get('server');
 const httpResource = new RegExp(`${server.scheme}://${server.domain}/users/([a-zA-Z0-9_]+)`);
 const acctResource = new RegExp(`acct:([a-zA-Z0-9_]+)@${server.domain}`);
 
+/**
+ * host-meta 応答
+ * @param context context
+ */
 export async function hostMeta(context: EinsamkeitContext): Promise<void> {
   setSuccess(context, 200, '');
 }
 
+/**
+ * webfinger 応答
+ * @param context context
+ */
 export async function webfinger(context: EinsamkeitContext): Promise<void> {
   const knex = getKnex();
   const targetUri = context.request.query.resource as string;

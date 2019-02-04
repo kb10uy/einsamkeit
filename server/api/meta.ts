@@ -9,7 +9,7 @@ const hostMetaXml = `
 <?xml version="1.0"?>
 <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
   <Link rel="lrdd" type="application/xrd+xml"
-        template="https://example.com/.well-known/webfinger?resource={uri}"
+        template="${server.scheme}://${server.domain}/.well-known/webfinger?resource={uri}"
   />
 </XRD>
 `;

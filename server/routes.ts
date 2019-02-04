@@ -1,10 +1,6 @@
 import * as KoaRouter from 'koa-router';
-
 import * as apiMeta from './api/meta';
-
-export interface EinsamkeitState {
-  user: unknown;
-}
+import { EinsamkeitState } from './types';
 
 /**
  * 全ルートを定義する

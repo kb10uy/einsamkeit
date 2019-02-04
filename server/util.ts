@@ -1,9 +1,11 @@
 import { ParameterizedContext } from 'koa';
-import { EinsamkeitState } from './routes';
+import { EinsamkeitState } from './types';
 import * as log4js from 'log4js';
 import * as config from 'config';
+import * as Knex from 'knex';
 
 let logger: log4js.Logger;
+let knex: Knex;
 
 /**
  * 出力可能なロガーを取得
@@ -14,6 +16,23 @@ export function getLogger(): log4js.Logger {
   logger = log4js.getLogger();
   logger.level = config.get('log.level');
   return logger;
+}
+
+/**
+ * シングルトン knex インスタンスを取得
+ */
+export function getKnex(): Knex {
+  if (knex) return knex;
+  knex = Knex({
+    client: 'pg',
+    connection: {
+      host: config.get('database.host'),
+      database: config.get('database.database'),
+      user: config.get('database.user'),
+      password: config.get('database.password'),
+    },
+  });
+  return knex;
 }
 
 /**

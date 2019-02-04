@@ -16,7 +16,7 @@ export const knexConfigMigrations: MigratorConfig = {
   stub: 'db/template.ts',
 };
 
-export const knexConfigDevelopment: Config = {
+export const knexConfig: Config = {
   client,
   connection,
   migrations: knexConfigMigrations,

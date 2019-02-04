@@ -12,6 +12,7 @@ async function addUser(username: string, publicKeyFilename: string, privateKeyFi
     const now = new Date();
     await knex('users').insert({
       name: username,
+      display_name: username,
       key_public: pubkey.toString(),
       key_private: prvkey.toString(),
       created_at: now,
@@ -20,7 +21,9 @@ async function addUser(username: string, publicKeyFilename: string, privateKeyFi
     logger.info(`User ${username} registered`);
   } catch (e) {
     console.log(e.message);
+    process.exit(1);
   }
+  process.exit(0);
 }
 
 const blahctl = cac('blahctl');

@@ -3,7 +3,10 @@ import { EinsamkeitState } from './types';
 import * as log4js from 'log4js';
 import * as config from 'config';
 import * as Knex from 'knex';
+import { URL } from 'url';
 
+const server: any = config.get('server');
+const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
 let logger: log4js.Logger;
 let knex: Knex;
 
@@ -55,4 +58,8 @@ export function setSuccess(ctx: ParameterizedContext<EinsamkeitState>, status: n
 export function setError(ctx: ParameterizedContext<EinsamkeitState>, status: number, body: unknown): void {
   ctx.response.status = status;
   ctx.response.body = body;
+}
+
+export function resolveLocalUrl(path: string): string {
+  return new URL(path, urlRoot).toString();
 }

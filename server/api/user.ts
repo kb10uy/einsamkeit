@@ -3,14 +3,14 @@ import { setSuccess, getLogger, getKnex, setError } from '../util';
 import { EinsamkeitContext } from '../types';
 
 const logger = getLogger();
-const knex = getKnex();
 
 export async function checkUser(context: EinsamkeitContext, next: () => Promise<void>): Promise<void> {
+  const knex = getKnex();
   const username = context.params.user;
+
   const [user] = await knex('users')
     .select('id', 'name', 'display_name', 'key_public', 'key_private')
     .where('name', username);
-
   if (user) {
     context.state.user = user;
     await next();

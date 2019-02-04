@@ -45,7 +45,7 @@ export async function user(context: EinsamkeitContext): Promise<void> {
 
 export async function inbox(context: EinsamkeitContext): Promise<void> {
   const body = context.request.body;
-  logger.info(`received: ${body}`);
+  logger.info(`received: ${JSON.stringify(body)}`);
   setSuccess(context, 200, {});
 }
 

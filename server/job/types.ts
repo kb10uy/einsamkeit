@@ -6,4 +6,10 @@ export interface SendAcceptJob {
   type: 'sendAccept';
 }
 
-export type EinsamkeitJob = SendAcceptJob | SendFollowJob;
+export interface ReceiveFollowJob {
+  type: 'receiveFollow';
+  target: any;
+  actor: any;
+}
+
+export type EinsamkeitJob = SendAcceptJob | SendFollowJob | ReceiveFollowJob;

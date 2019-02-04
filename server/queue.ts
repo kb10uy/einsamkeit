@@ -12,5 +12,7 @@ worker.process(config.get('queue.concurrency'), async (job: Queue.Job<Einsamkeit
       break;
     case 'sendFollow':
       break;
+    case 'receiveFollow':
+      break;
   }
 });

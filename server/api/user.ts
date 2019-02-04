@@ -1,6 +1,7 @@
 import { setSuccess, getLogger, getKnex, setError, resolveLocalUrl } from '../util';
 import { EinsamkeitContext } from '../types';
 import { makeASRoot } from '../ap/activitystreams';
+import { processAcceptActivity, processFollowActivity, processUndoActivity } from '../ap/activity';
 
 const logger = getLogger();
 
@@ -58,6 +59,17 @@ export async function user(context: EinsamkeitContext): Promise<void> {
  */
 export async function inbox(context: EinsamkeitContext): Promise<void> {
   const body = context.request.body;
+  switch (body.type) {
+    case 'Accept':
+      await processAcceptActivity(body);
+      break;
+    case 'Follow':
+      await processFollowActivity(body);
+      break;
+    case 'Undo':
+      await processUndoActivity(body);
+      break;
+  }
   logger.info(`received: ${JSON.stringify(body)}`);
   setSuccess(context, 200, {});
 }

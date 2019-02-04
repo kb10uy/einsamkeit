@@ -45,3 +45,14 @@ export function setSuccess(ctx: ParameterizedContext<EinsamkeitState>, status: n
   ctx.response.status = status;
   ctx.response.body = body;
 }
+
+/**
+ * Koa context にレスポンスを設定する
+ * @param ctx context
+ * @param status status code
+ * @param body body object
+ */
+export function setError(ctx: ParameterizedContext<EinsamkeitState>, status: number, body: unknown): void {
+  ctx.response.status = status;
+  ctx.response.body = body;
+}

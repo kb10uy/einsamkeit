@@ -5,13 +5,22 @@ import { EinsamkeitContext } from '../types';
 const server: any = config.get('server');
 const httpResource = new RegExp(`${server.scheme}://${server.domain}/users/([a-zA-Z0-9_]+)`);
 const acctResource = new RegExp(`acct:([a-zA-Z0-9_]+)@${server.domain}`);
+const hostMetaXml = `
+<?xml version="1.0"?>
+<XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+  <Link rel="lrdd" type="application/xrd+xml"
+        template="https://example.com/.well-known/webfinger?resource={uri}"
+  />
+</XRD>
+`;
 
 /**
  * host-meta 応答
  * @param context context
  */
 export async function hostMeta(context: EinsamkeitContext): Promise<void> {
-  setSuccess(context, 200, '');
+  context.response.type = 'application/xml';
+  setSuccess(context, 200, hostMetaXml);
 }
 
 /**

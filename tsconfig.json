@@ -5,5 +5,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2018"],
+    "typeRoots" : ["./node_modules/@types", "./types"]
   }
 }

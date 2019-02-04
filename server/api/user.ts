@@ -1,3 +1,4 @@
+import * as AS from 'activitystrea.ms';
 import { setSuccess, getLogger, getKnex, setError } from '../util';
 import { EinsamkeitContext } from '../types';
 
@@ -22,4 +23,8 @@ export async function inbox(context: EinsamkeitContext): Promise<void> {
   const body = context.request.body;
   logger.info(`received: ${body}`);
   setSuccess(context, 200, {});
+}
+
+export async function outbox(context: EinsamkeitContext): Promise<void> {
+  setSuccess(context, 200, AS.orderedCollection());
 }

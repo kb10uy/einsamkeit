@@ -8,8 +8,8 @@
     "migration:make": "knex --knexfile knexfile.ts -x ts migrate:make",
     "migration:run": "knex --knexfile knexfile.ts migrate:latest",
     "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback",
-    "blahctl": "ts-node ./server/blahctl.ts",
-    "server:web": "ts-node ./server/web.ts"
+    "blahctl": "ts-node -P ./tsconfig.json ./server/blahctl.ts",
+    "server:web": "ts-node -P ./tsconfig.json -D 7016 ./server/web.ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "@types/koa-bodyparser": "^4.2.1",
     "@types/koa-router": "^7.0.39",
     "@types/node": "^10.12.21",
+    "activitystrea.ms": "^2.1.3",
     "bull": "^3.6.0",
     "config": "^3.0.1",
     "knex": "^0.16.3",

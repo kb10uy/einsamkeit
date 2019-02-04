@@ -3,12 +3,15 @@ import { EinsamkeitState } from './types';
 import * as log4js from 'log4js';
 import * as config from 'config';
 import * as Knex from 'knex';
+import * as Queue from 'bull';
 import { URL } from 'url';
+import { EinsamkeitJob } from './job/types';
 
 const server = config.get<any>('server');
 const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
 let logger: log4js.Logger;
 let knex: Knex;
+let queue: Queue.Queue<EinsamkeitJob>;
 
 /**
  * 出力可能なロガーを取得
@@ -19,6 +22,17 @@ export function getLogger(): log4js.Logger {
   logger = log4js.getLogger();
   logger.level = config.get('log.level');
   return logger;
+}
+
+/**
+ * 投げる用の Queue を取得
+ */
+export function getQueue(): Queue.Queue<EinsamkeitJob> {
+  if (queue) return queue;
+  queue = new Queue('einsamkeit-worker', {
+    redis: config.get('queue.redis'),
+  });
+  return queue;
 }
 
 /**

@@ -2,7 +2,7 @@ import * as Queue from 'bull';
 import * as config from 'config';
 import { EinsamkeitJob } from './job/types';
 
-const worker: Queue.Queue<EinsamkeitJob> = new Queue('worker', {
+const worker: Queue.Queue<EinsamkeitJob> = new Queue('einsamkeit-worker', {
   redis: config.get('queue.redis'),
 });
 

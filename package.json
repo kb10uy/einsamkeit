@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migration:make": "knex --knexfile knexfile.ts migrate:make --migrations-directory ./db/migrations",
     "migration:run": "knex --knexfile knexfile.ts migrate:latest",
-    "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback"
+    "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "blahctl": "ts-node ./server/blahctl.ts",
+    "server:web": "ts-node ./server/web.ts"
   },
   "author": "",
   "license": "ISC",

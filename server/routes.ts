@@ -11,5 +11,7 @@ export function defineRoutes(router: KoaRouter<EinsamkeitState>): void {
   router.get('/.well-known/host-meta', apiMeta.hostMeta);
   router.get('/.well-known/webfinger', apiMeta.webfinger);
 
+  router.get('/users/:user', apiUser.checkUser, apiUser.user);
   router.post('/users/:user/inbox', apiUser.checkUser, apiUser.inbox);
+  router.get('/users/:user/inbox', apiUser.checkUser, apiUser.outbox);
 }

@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  # Node.js
+  node:
+    image: '11-alpine'
+    environment:
+      NODE_ENV: docker
+    volumes:
+      - './:/var/www/einsamkeit'
+    user: 'node'
+    port:
+      - '80:3000'
+
+  # PostgreSQL
+  postgres:
+    image: '11-alpine'
+    environment:
+      POSTGRES_USER: 'einsamkeit'
+      POSTGRES_PASSWORD: 'loneliness'
+      POSTGRES_DB: 'einsamkeit'
+    volumes:
+      - './docker/data/postgres:/var/lib/postgresql/data'
+    expose:
+      - '5432'
+
+  # Redis
+  redis:
+    image: '5-alpine'
+    expose:
+      - '6379'

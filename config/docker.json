@@ -1,0 +1,36 @@
+{
+  "server": {
+    "scheme": "http",
+    "domain": "localhost",
+    "port": 3000
+  },
+  "encryptionKeys": ["einsamkeit-encryption"],
+  "database": {
+    "host": "postgres",
+    "database": "einsamkeit",
+    "user": "einsamkeit",
+    "password": "loneliness"
+  },
+  "queue": {
+    "redis": {
+      "host": "redis",
+      "port": 6379,
+      "password": ""
+    },
+    "concurrency": 10
+  },
+  "log": {
+    "level": "debug",
+    "log4js": {
+      "appenders": {
+        "einsamkeit": { "type": "stdout" }
+      },
+      "categories": {
+        "default": {
+          "appenders": ["einsamkeit"],
+          "level": "info"
+        }
+      }
+    }
+  }
+}

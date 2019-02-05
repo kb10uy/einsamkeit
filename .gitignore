@@ -1,3 +1,5 @@
 /node_modules
 /public
 /config/*.json
+/docker/data/*
+!/config/docker.json

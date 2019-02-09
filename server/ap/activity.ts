@@ -13,7 +13,6 @@ export async function processAcceptActivity(body: any): Promise<void> {}
  * @param body
  */
 export async function processFollowActivity(body: any): Promise<void> {
-  // TODO: 書く
   // TODO: 現状こちらのアカウントは自動 Accept するのであとでなんとかする
   queue.add({
     type: 'receiveFollow',

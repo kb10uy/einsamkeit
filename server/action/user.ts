@@ -1,9 +1,37 @@
+import * as config from 'config';
 import axios from 'axios';
 import { URL } from 'url';
 import { getKnex, getLogger } from '../util';
-import { Server, DbServer, DbRemoteUser, RemoteUser } from './types';
+import { DbServer, DbLocalUser, DbRemoteUser, RemoteUser, LocalUser } from './types';
 
+const localUserRegex = new RegExp(
+  `${config.get('server.scheme')}://${config.get('server.host')}/users/([a-zA-Z0-9_]{1,128})`,
+);
 const logger = getLogger();
+
+/**
+ * URL がローカルユーザーかどうかを判定し、そうであればそのユーザーの情報を取得する。
+ * @param userId ユーザーを示す URL
+ */
+export async function resolveLocalUser(userId: string): Promise<LocalUser | undefined> {
+  const match = userId.match(localUserRegex);
+  if (!match) return undefined;
+
+  const knex = getKnex();
+  const [dbuser]: [DbLocalUser] = await knex('users')
+    .select()
+    .where('name', match[1]);
+  if (!dbuser) return undefined;
+  return {
+    id: dbuser.id,
+    created_at: dbuser.created_at,
+    updated_at: dbuser.updated_at,
+    name: dbuser.name,
+    displayName: dbuser.display_name,
+    publicKey: dbuser.key_public,
+    privateKey: dbuser.key_private,
+  };
+}
 
 /**
  * リモートのユーザーを検索する。なければ取得する
@@ -46,6 +74,7 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
     name: dbuser.name,
     displayName: dbuser.display_name,
     publicKey: dbuser.key_public,
+    inbox: dbuser.inbox,
     server: {
       id: dbserver.id,
       created_at: dbserver.created_at,

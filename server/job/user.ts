@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { ReceiveFollowJob, SendAcceptJob } from './types';
 import { resolveLocalUser, fetchRemoteUser } from '../action/user';
-import { getQueue, getLogger, resolveLocalUrl } from '../util';
+import { getQueue, getLogger, resolveLocalUrl, getRedis } from '../util';
 import { generateHttpSignature } from '../action/auth';
 import { URL } from 'url';
 import { makeASRoot } from '../ap/activitystreams';
 
 const logger = getLogger();
 const queue = getQueue();
+const redis = getRedis();
 
 /**
  * Follow Activity の処理

@@ -6,12 +6,14 @@ import * as Knex from 'knex';
 import * as Queue from 'bull';
 import { URL } from 'url';
 import { EinsamkeitJob } from './job/types';
+import * as Redis from 'ioredis';
 
 const server = config.get<any>('server');
 const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
 let logger: log4js.Logger;
 let knex: Knex;
 let queue: Queue.Queue<EinsamkeitJob>;
+let redis: Redis.Redis;
 
 /**
  * 出力可能なロガーを取得
@@ -33,6 +35,15 @@ export function getQueue(): Queue.Queue<EinsamkeitJob> {
     redis: config.get('queue.redis'),
   });
   return queue;
+}
+
+/**
+ * ジョブキュー以外のデータのための Redis を取得
+ */
+export function getRedis(): Redis.Redis {
+  if (redis) return redis;
+  redis = new Redis(config.get('queue.redis'));
+  return redis;
 }
 
 /**

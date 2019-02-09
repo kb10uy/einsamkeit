@@ -9,7 +9,7 @@ services:
     volumes:
       - './:/var/www/einsamkeit'
     ports:
-      - '80:3000'
+      - '3000:3000'
     user: 'node'
     working_dir: /var/www/einsamkeit
     command: 'npm run server:web'

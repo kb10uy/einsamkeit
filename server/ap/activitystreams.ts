@@ -11,5 +11,6 @@ export function makeASOrderedCollection(items: any[]): any {
   return {
     ...makeASRoot(),
     type: 'OrderedCollection',
+    orderedItems: items,
   };
 }

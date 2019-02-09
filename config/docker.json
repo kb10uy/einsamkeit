@@ -1,8 +1,8 @@
 {
   "server": {
     "scheme": "http",
-    "domain": "localhos:3000",
-    "port": 3000
+    "domain": "localhost:4000",
+    "port": 4000
   },
   "encryptionKeys": ["einsamkeit-encryption"],
   "database": {
@@ -11,11 +11,18 @@
     "user": "einsamkeit",
     "password": "loneliness"
   },
+  "redis": {
+    "host": "redis",
+    "port": 6379,
+    "password": "",
+    "db": 0
+  },
   "queue": {
     "redis": {
       "host": "redis",
       "port": 6379,
-      "password": ""
+      "password": "",
+      "db": 1
     },
     "concurrency": 10
   },

@@ -1,13 +1,13 @@
 import * as config from 'config';
-import axios from 'axios';
 import { URL } from 'url';
-import { getKnex, getLogger } from '../util';
+import { getKnex, getLogger, getAPAxios } from '../util';
 import { DbServer, DbLocalUser, DbRemoteUser, RemoteUser, LocalUser } from './types';
 
 const localUserRegex = new RegExp(
   `${config.get('server.scheme')}://${config.get('server.domain')}/users/([a-zA-Z0-9_]{1,128})`,
 );
 const logger = getLogger();
+const apaxios = getAPAxios();
 
 /**
  * URL がローカルユーザーかどうかを判定し、そうであればそのユーザーの情報を取得する。
@@ -49,7 +49,7 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
       .where('id', dbuser.server_id);
   } else {
     const now = new Date();
-    const userInfo = (await axios.get(userId)).data;
+    const userInfo = (await apaxios.get(userId)).data;
     dbserver = await fetchRemoteServer(userInfo);
     dbuser = (await knex('remote_users').insert(
       {
@@ -91,6 +91,7 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
  */
 export async function fetchRemoteServer(userInfo: any): Promise<DbServer> {
   const knex = getKnex();
+  logger.info(JSON.stringify(userInfo));
   const userIdUrl = new URL(userInfo.id);
   let server: DbServer = (await knex('servers')
     .select()
@@ -102,7 +103,7 @@ export async function fetchRemoteServer(userInfo: any): Promise<DbServer> {
       {
         scheme: userIdUrl.protocol,
         domain: userIdUrl.host,
-        sharedInbox: userInfo.endpoints && userInfo.endpoints.sharedInbox ? userInfo.endpoints.sharedInbox : null,
+        shared_inbox: userInfo.endpoints && userInfo.endpoints.sharedInbox ? userInfo.endpoints.sharedInbox : null,
         created_at: now,
         updated_at: now,
       },

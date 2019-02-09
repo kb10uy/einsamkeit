@@ -1,6 +1,7 @@
-import { getQueue } from '../util';
+import { getQueue, getLogger } from '../util';
 
 const queue = getQueue();
+const logger = getLogger();
 
 /**
  * Accept Activity
@@ -14,7 +15,7 @@ export async function processAcceptActivity(body: any): Promise<void> {}
  */
 export async function processFollowActivity(body: any): Promise<void> {
   // TODO: 現状こちらのアカウントは自動 Accept するのであとでなんとかする
-  queue.add({
+  await queue.add({
     type: 'receiveFollow',
     actor: body.actor,
     target: body.object,

@@ -7,6 +7,7 @@ import * as Queue from 'bull';
 import { URL } from 'url';
 import { EinsamkeitJob } from './job/types';
 import * as Redis from 'ioredis';
+import axios, { AxiosInstance } from 'axios';
 
 const server = config.get<any>('server');
 const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
@@ -14,6 +15,7 @@ let logger: log4js.Logger;
 let knex: Knex;
 let queue: Queue.Queue<EinsamkeitJob>;
 let redis: Redis.Redis;
+let axiosActivityPub: AxiosInstance;
 
 /**
  * 出力可能なロガーを取得
@@ -42,7 +44,7 @@ export function getQueue(): Queue.Queue<EinsamkeitJob> {
  */
 export function getRedis(): Redis.Redis {
   if (redis) return redis;
-  redis = new Redis(config.get('queue.redis'));
+  redis = new Redis(config.get('redis'));
   return redis;
 }
 
@@ -61,6 +63,27 @@ export function getKnex(): Knex {
     },
   });
   return knex;
+}
+
+/**
+ * ActivityPub 用の axios インスタンス を取得
+ */
+export function getAPAxios(): AxiosInstance {
+  if (axiosActivityPub) return axiosActivityPub;
+  axiosActivityPub = axios.create();
+  axiosActivityPub.interceptors.request.use((config) => {
+    config.headers.Accept = 'application/activity+json,application/ld+json,application/json';
+    return config;
+  });
+  axiosActivityPub.interceptors.response.use((response) => {
+    const type: string = response.headers['content-type'] || 'text/html';
+    if (type.match(/a/)) {
+      return response;
+    } else {
+      throw new Error('Response is not JSON');
+    }
+  });
+  return axiosActivityPub;
 }
 
 /**

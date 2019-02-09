@@ -57,6 +57,7 @@ export async function receiveFollow(data: ReceiveFollowJob): Promise<void> {
         object: data.target,
       },
     });
+    logger.info(`Remote user #${actor.id} followed local user #${target.id}`);
   }
 }
 
@@ -79,9 +80,11 @@ export async function sendAccept(data: SendAcceptJob): Promise<void> {
     },
     {
       headers: {
-        ...headers,
+        host: headers.host,
+        date: headers.date,
         signature,
       },
     },
   );
+  logger.info(`Sent Accept Activity to ${inbox}`);
 }

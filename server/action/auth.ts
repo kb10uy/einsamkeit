@@ -1,5 +1,8 @@
 import * as _ from 'lodash';
 import { createSign } from 'crypto';
+import { getLogger } from '../util';
+
+const logger = getLogger();
 
 /**
  * HTTP 署名を生成する。
@@ -26,5 +29,5 @@ export function generateHttpSignature(headers: { [x: string]: string }, key: str
     headers: joinedHeaders,
     signature,
   };
-  return _.map(headerData, (v, k) => `${k}:"${v}"`).join(',');
+  return _.map(headerData, (v, k) => `${k}="${v}"`).join(',');
 }

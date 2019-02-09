@@ -10,7 +10,7 @@ services:
       - './:/var/www/einsamkeit'
       - './docker/etc/:/etc/einsamkeit'
     ports:
-      - '3000:3000'
+      - '4000:4000'
     user: 'node'
     working_dir: /var/www/einsamkeit
     command: 'npm run server:web'

@@ -11,11 +11,18 @@
     "user": "einsamkeit",
     "password": "loneliness"
   },
+  "redis": {
+    "host": "redis",
+    "port": 6379,
+    "password": "",
+    "db": 0
+  },
   "queue": {
     "redis": {
       "host": "redis",
       "port": 6379,
-      "password": ""
+      "password": "",
+      "db": 1
     },
     "concurrency": 10
   },

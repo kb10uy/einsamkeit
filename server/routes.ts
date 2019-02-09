@@ -13,5 +13,7 @@ export function defineRoutes(router: KoaRouter<EinsamkeitState>): void {
 
   router.get('/users/:user', apiUser.checkUser, apiUser.user);
   router.post('/users/:user/inbox', apiUser.checkUser, apiUser.inbox);
-  router.get('/users/:user/inbox', apiUser.checkUser, apiUser.outbox);
+  router.get('/users/:user/outbox', apiUser.checkUser, apiUser.outbox);
+  router.get('/users/:user/following', apiUser.checkUser, apiUser.following);
+  router.get('/users/:user/followers', apiUser.checkUser, apiUser.followers);
 }

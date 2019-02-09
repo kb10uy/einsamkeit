@@ -81,3 +81,19 @@ export async function inbox(context: EinsamkeitContext): Promise<void> {
 export async function outbox(context: EinsamkeitContext): Promise<void> {
   setSuccess(context, 200, {});
 }
+
+/**
+ * フォロー一覧
+ * @param context context
+ */
+export async function following(context: EinsamkeitContext): Promise<void> {
+  setSuccess(context, 200, {});
+}
+
+/**
+ * フォロワー一覧
+ * @param context context
+ */
+export async function followers(context: EinsamkeitContext): Promise<void> {
+  setSuccess(context, 200, {});
+}

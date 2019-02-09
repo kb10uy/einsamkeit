@@ -5,7 +5,7 @@ import { getKnex, getLogger } from '../util';
 import { DbServer, DbLocalUser, DbRemoteUser, RemoteUser, LocalUser } from './types';
 
 const localUserRegex = new RegExp(
-  `${config.get('server.scheme')}://${config.get('server.host')}/users/([a-zA-Z0-9_]{1,128})`,
+  `${config.get('server.scheme')}://${config.get('server.domain')}/users/([a-zA-Z0-9_]{1,128})`,
 );
 const logger = getLogger();
 

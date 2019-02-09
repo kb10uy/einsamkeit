@@ -9,6 +9,8 @@ services:
     volumes:
       - './:/var/www/einsamkeit'
       - './docker/etc/:/etc/einsamkeit'
+    networks:
+      - 'kodoku'
     ports:
       - '4000:4000'
     user: 'node'
@@ -25,6 +27,8 @@ services:
     volumes:
       - './docker/data/postgres:/var/lib/postgresql/data'
       - './docker/etc/:/etc/einsamkeit'
+    networks:
+      - 'kodoku'
     expose:
       - '5432'
 
@@ -33,5 +37,15 @@ services:
     image: 'redis:5-alpine'
     volumes:
       - './docker/etc/:/etc/einsamkeit'
+    networks:
+      - 'kodoku'
     expose:
       - '6379'
+
+networks:
+  kodoku:
+    driver: 'bridge'
+    ipam:
+      driver: 'default'
+      config:
+        - subnet: '172.31.0.0/24'

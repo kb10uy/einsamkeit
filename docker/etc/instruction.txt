@@ -1,0 +1,2 @@
+This directory will appear in Docker containers as '/etc/einsamkeit'.
+You can use this for file interatction.

@@ -2,4 +2,6 @@
 /public
 /config/*.json
 /docker/data/*
+/docker/etc/*
+!/docker/etc/instruction.txt
 !/config/docker.json

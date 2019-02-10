@@ -25,6 +25,7 @@
     "@types/koa-router": "^7.0.39",
     "@types/lodash": "^4.14.120",
     "@types/node": "^10.12.21",
+    "@types/nunjucks": "^3.1.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.2.1",
     "bull": "^3.6.0",
@@ -39,6 +40,7 @@
     "koa-router": "^7.4.0",
     "lodash": "^4.17.11",
     "log4js": "^4.0.2",
+    "nunjucks": "^3.1.7",
     "pg": "^7.8.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"

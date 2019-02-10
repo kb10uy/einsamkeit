@@ -36,8 +36,9 @@ export async function resolveLocalUser(userId: string): Promise<LocalUser | unde
 /**
  * リモートのユーザーを検索する。なければ取得する
  * @param userId ユーザーを示す id プロパティ
+ * @param recursive 再帰検索を有効にするなら true
  */
-export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
+export async function fetchRemoteUser(userId: string, recursive: boolean = true): Promise<RemoteUser> {
   const knex = getKnex();
   let dbserver: DbServer;
   let dbuser: DbRemoteUser = (await knex('remote_users')
@@ -53,9 +54,12 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
     if (userInfo.type !== 'Person') {
       // userId が直接 Person オブジェクトを落としてこないことがあるので
       // owner からアクセスできるか試してみる
-      userInfo = (await apaxios.get(userInfo.owner)).data;
+      if (!recursive) {
+        logger.warn(`Failed to fetch ${userId} (max recursive)`);
+        throw new Error('Failed to fetch remote user');
+      }
+      return fetchRemoteUser(userInfo.owner, false);
     }
-    logger.info(userInfo);
     dbserver = await fetchRemoteServer(userInfo);
     dbuser = (await knex('remote_users').insert(
       {

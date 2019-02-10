@@ -1,4 +1,4 @@
-import { ParameterizedContext } from 'koa';
+import { ParameterizedContext, Middleware } from 'koa';
 import * as KoaRouter from 'koa-router';
 
 /**
@@ -20,6 +20,11 @@ export interface EinsamkeitState {
 }
 
 /**
- * Einsamkeit用の Koa.Context のエイリアス
+ * Einsamkeit 用の Koa.Context のエイリアス
  */
 export type EinsamkeitContext = ParameterizedContext<EinsamkeitState, KoaRouter.IRouterParamContext<EinsamkeitState>>;
+
+/**
+ * Einsamkeit 用の Koa.Middleware のエイリアス
+ */
+export type EinsamkeitMiddleware = Middleware<EinsamkeitState, KoaRouter.IRouterParamContext<EinsamkeitState>>;

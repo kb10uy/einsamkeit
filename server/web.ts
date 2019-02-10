@@ -1,6 +1,8 @@
+import * as path from 'path';
 import * as Koa from 'koa';
 import * as KoaRouter from 'koa-router';
 import * as KoaBodyParser from 'koa-bodyparser';
+import * as nunjucks from 'nunjucks';
 import * as config from 'config';
 import { defineRoutes } from './routes';
 import { getLogger } from './util';
@@ -9,6 +11,9 @@ import { EinsamkeitState } from './types';
 const logger = getLogger();
 const application = new Koa<EinsamkeitState>();
 const router = new KoaRouter<EinsamkeitState>();
+nunjucks.configure(path.resolve(process.cwd(), 'client/templates'), {
+  autoescape: true,
+});
 
 defineRoutes(router);
 

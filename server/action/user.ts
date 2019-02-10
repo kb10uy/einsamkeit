@@ -49,7 +49,13 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
       .where('id', dbuser.server_id);
   } else {
     const now = new Date();
-    const userInfo = (await apaxios.get(userId)).data;
+    let userInfo = (await apaxios.get(userId)).data;
+    if (userInfo.type !== 'Person') {
+      // userId が直接 Person オブジェクトを落としてこないことがあるので
+      // owner からアクセスできるか試してみる
+      userInfo = (await apaxios.get(userInfo.owner)).data;
+    }
+    logger.info(userInfo);
     dbserver = await fetchRemoteServer(userInfo);
     dbuser = (await knex('remote_users').insert(
       {

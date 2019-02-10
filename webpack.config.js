@@ -7,7 +7,7 @@ module.exports = {
   entry: ['./client/scripts/main.ts', './client/styles/main.scss'],
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'einsamkeit.js',
+    filename: 'scripts/einsamkeit.js',
   },
 
   module: {
@@ -46,7 +46,7 @@ module.exports = {
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'einsamkeit.css',
+      filename: 'styles/einsamkeit.css',
     }),
     new CopyWebpackPlugin([]),
   ],

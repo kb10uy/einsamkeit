@@ -43,7 +43,7 @@ export async function user(context: EinsamkeitContext): Promise<void> {
     following: resolveLocalUrl(`/users/${user.name}/following`),
     followers: resolveLocalUrl(`/users/${user.name}/followers`),
     name: user.display_name,
-    preferredName: user.name,
+    preferredUsername: user.name,
     summary: '',
     url: resolveLocalUrl(`/users/${user.name}`),
     publicKey: {

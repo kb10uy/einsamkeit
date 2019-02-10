@@ -1,8 +1,8 @@
 version: '3.7'
 
 services:
-  # Node.js
-  node:
+  # Web server
+  node_web:
     image: 'node:11-alpine'
     environment:
       NODE_ENV: docker
@@ -16,6 +16,20 @@ services:
     user: 'node'
     working_dir: /var/www/einsamkeit
     command: 'npm run server:web'
+
+  # Job worker
+  node_worker:
+    image: 'node:11-alpine'
+    environment:
+      NODE_ENV: docker
+    volumes:
+      - './:/var/www/einsamkeit'
+      - './docker/etc/:/etc/einsamkeit'
+    networks:
+      - 'kodoku'
+    user: 'node'
+    working_dir: /var/www/einsamkeit
+    command: 'npm run server:queue'
 
   # PostgreSQL
   postgres:

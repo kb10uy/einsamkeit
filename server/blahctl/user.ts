@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
 import { getKnex, getAPAxios, getQueue, resolveLocalUrl, getRedis } from '../util';
-import { DbLocalUser } from '../action/types';
+import { DbLocalUser, DbRemoteUser } from '../action/types';
 import { fetchRemoteUser } from '../action/user';
 
 /**
@@ -254,5 +254,48 @@ export async function UnfollowRemoteUser(): Promise<void> {
     },
   });
 
+  process.exit(0);
+}
+
+/**
+ * リモートユーザーの記録を更新する
+ *
+ * @export
+ * @returns {Promise<void>}
+ */
+export async function updateRemoteUser(): Promise<void> {
+  const knex = getKnex();
+  const apaxios = getAPAxios();
+
+  console.log(chalk.green('Updates all known remote users.'));
+
+  const remoteUsers: DbRemoteUser[] = await knex('remote_users').select();
+  for (const remoteUser of remoteUsers) {
+    const { data: userResult } = await apaxios.get(remoteUser.user_id);
+
+    // 鍵が違っていたら乗っ取りの可能性があるのでスキップ
+    if (
+      userResult.publicKey &&
+      userResult.publicKey.publicKeyPem &&
+      userResult.publicKey.publicKeyPem !== remoteUser.key_public
+    ) {
+      console.log(chalk.yellow(`Remote user #${remoteUser.id} has different key from ours.`));
+      continue;
+    }
+
+    const now = new Date();
+    const [newUser]: [DbRemoteUser] = await knex('remote_users')
+      .where('id', remoteUser.id)
+      .update(
+        {
+          name: userResult.preferredUsername,
+          display_name: userResult.name,
+          icon: userResult.icon && userResult.icon.url,
+          updated_at: now,
+        },
+        '*',
+      );
+    console.log(chalk.greenBright(`Updated ${remoteUser.id} (${remoteUser.user_id}).`));
+  }
   process.exit(0);
 }

@@ -65,6 +65,7 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
         display_name: userInfo.name,
         key_public: userInfo.publicKey ? userInfo.publicKey.publicKeyPem : null,
         inbox: userInfo.inbox,
+        icon: userInfo.icon && userInfo.icon.url,
         created_at: now,
         updated_at: now,
       },

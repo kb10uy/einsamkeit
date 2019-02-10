@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const AutoPrefixer = require('autoprefixer');
 
 module.exports = {
-  entry: ['./assets/scripts/main.ts', './assets/styles/main.scss'],
+  entry: ['./client/scripts/main.ts', './client/styles/main.scss'],
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'einsamkeit.js',

@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "migration:make": "knex --knexfile knexfile.ts -x ts migrate:make",
-    "migration:run": "knex --knexfile knexfile.ts migrate:latest",
-    "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "build": "webpack --mode development",
+    "watch": "webpack --mode development --watch",
     "blahctl": "ts-node -P ./tsconfig.json ./server/blahctl.ts",
     "server:web": "ts-node -P ./tsconfig.json -D 7016 ./server/web.ts",
-    "server:queue": "ts-node -P ./tsconfig.json -D 7016 ./server/queue.ts"
+    "server:queue": "ts-node -P ./tsconfig.json -D 7016 ./server/queue.ts",
+    "migration:make": "knex --knexfile knexfile.ts -x ts migrate:make",
+    "migration:run": "knex --knexfile knexfile.ts migrate:latest",
+    "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +26,7 @@
     "@types/lodash": "^4.14.120",
     "@types/node": "^10.12.21",
     "axios": "^0.18.0",
+    "bootstrap": "^4.2.1",
     "bull": "^3.6.0",
     "cac": "^6.4.2",
     "chalk": "^2.4.2",

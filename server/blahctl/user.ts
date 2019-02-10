@@ -181,9 +181,25 @@ export async function UnfollowRemoteUser(): Promise<void> {
       inbox: 'remote_users.inbox',
       shared_inbox: 'servers.shared_inbox',
     })
+    .select(knex.raw('0 as pending'))
     .join('servers', 'servers.id', 'remote_users.server_id')
     .rightJoin('followings', 'followings.remote_user_id', 'remote_users.id')
-    .where('followings.local_user_id', (localUser as DbLocalUser).id);
+    .where('followings.local_user_id', (localUser as DbLocalUser).id)
+    .union(
+      knex('remote_users')
+        .select({
+          id: 'remote_users.id',
+          name: 'remote_users.name',
+          display_name: 'remote_users.display_name',
+          user_id: 'remote_users.user_id',
+          domain: 'servers.domain',
+          inbox: 'remote_users.inbox',
+          shared_inbox: 'servers.shared_inbox',
+        })
+        .select(knex.raw('1 as pending'))
+        .join('servers', 'servers.id', 'remote_users.server_id')
+        .rightJoin('pending_follows', 'pending_follows.remote_user_id', 'remote_users.id'),
+    );
 
   const { userToUnfollow } = await inquirer.prompt([
     {
@@ -191,7 +207,7 @@ export async function UnfollowRemoteUser(): Promise<void> {
       name: 'userToUnfollow',
       message: 'Select a user to unfollow',
       choices: followings.map((f: any) => ({
-        name: `${f.display_name} (${f.name}@${f.domain})`,
+        name: `${f.pending ? '[PENDING] ' : ''}${f.display_name} (${f.name}@${f.domain})`,
         value: f,
         short: `${f.name}@${f.domain}`,
       })),
@@ -208,11 +224,21 @@ export async function UnfollowRemoteUser(): Promise<void> {
   if (!confirmed) process.exit(0);
 
   const me = resolveLocalUrl(`/users/${localUser.name}`);
-  await redis.hincrby(`userstats:${localUser.id}`, 'following', -1);
-  await knex('followings')
-    .where('local_user_id', localUser.id)
-    .where('remote_user_id', userToUnfollow.id)
-    .delete();
+
+  // 申請中かどうかで振り分け
+  if (userToUnfollow.pending) {
+    await knex('pending_follows')
+      .where('local_user_id', localUser.id)
+      .where('remote_user_id', userToUnfollow.id)
+      .delete();
+  } else {
+    await redis.hincrby(`userstats:${localUser.id}`, 'following', -1);
+    await knex('followings')
+      .where('local_user_id', localUser.id)
+      .where('remote_user_id', userToUnfollow.id)
+      .delete();
+  }
+
   await queue.add({
     type: 'sendUndo',
     targetInbox: userToUnfollow.shared_inbox || userToUnfollow.inbox,

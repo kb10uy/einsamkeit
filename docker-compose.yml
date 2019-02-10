@@ -51,6 +51,7 @@ services:
     image: 'redis:5-alpine'
     volumes:
       - './docker/etc/:/etc/einsamkeit'
+      - './docker/data/redis/:/data'
     networks:
       - 'kodoku'
     expose:

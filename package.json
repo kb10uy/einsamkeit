@@ -12,7 +12,10 @@
     "server:queue": "ts-node -P ./tsconfig.json ./server/queue.ts",
     "migration:make": "knex --knexfile knexfile.ts -x ts migrate:make",
     "migration:run": "knex --knexfile knexfile.ts migrate:latest",
-    "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback"
+    "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "docker:node": "docker-compose exec node_web sh",
+    "docker:redis": "docker-compose exec redis redis-cli",
+    "docker:postgres": "docker-compose exec psql -U einsamkeit"
   },
   "author": "",
   "license": "ISC",

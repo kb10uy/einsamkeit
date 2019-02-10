@@ -91,7 +91,7 @@ export async function fetchRemoteUser(userId: string): Promise<RemoteUser> {
  */
 export async function fetchRemoteServer(userInfo: any): Promise<DbServer> {
   const knex = getKnex();
-  logger.info(JSON.stringify(userInfo));
+
   const userIdUrl = new URL(userInfo.id);
   let server: DbServer = (await knex('servers')
     .select()

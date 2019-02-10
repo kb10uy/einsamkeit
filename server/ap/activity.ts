@@ -26,4 +26,18 @@ export async function processFollowActivity(body: any): Promise<void> {
  * Undo Activity
  * @param body
  */
-export async function processUndoActivity(body: any): Promise<void> {}
+export async function processUndoActivity(body: any): Promise<void> {
+  if (typeof body.object !== 'object') throw new Error('The object of Undo Activity is not an object');
+  switch (body.object.type) {
+    case 'Follow':
+      await queue.add({
+        type: 'receiveUnfollow',
+        actor: body.actor,
+        target: body.object.object,
+      });
+      break;
+    default:
+      logger.info(`Undo ${body.object.type} is unsupported`);
+      break;
+  }
+}

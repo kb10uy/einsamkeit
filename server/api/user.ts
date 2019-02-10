@@ -1,9 +1,10 @@
-import { setSuccess, getLogger, getKnex, setError, resolveLocalUrl } from '../util';
+import { setSuccess, getLogger, getKnex, setError, resolveLocalUrl, getQueue } from '../util';
 import { EinsamkeitContext } from '../types';
 import { makeASRoot } from '../ap/activitystreams';
 import { processAcceptActivity, processFollowActivity, processUndoActivity } from '../ap/activity';
 
 const logger = getLogger();
+const queue = getQueue();
 
 /**
  * 存在しないユーザーの場合は 404 を返す
@@ -58,19 +59,16 @@ export async function user(context: EinsamkeitContext): Promise<void> {
  * @param context context
  */
 export async function inbox(context: EinsamkeitContext): Promise<void> {
+  const user = context.state.user;
+  if (!user) throw new Error('Precondition failed');
+
   const body = context.request.body;
-  switch (body.type) {
-    case 'Accept':
-      await processAcceptActivity(body);
-      break;
-    case 'Follow':
-      await processFollowActivity(body);
-      break;
-    case 'Undo':
-      await processUndoActivity(body);
-      break;
-  }
-  logger.info(`received: ${JSON.stringify(body)}`);
+  await queue.add({
+    type: 'processInbox',
+    username: user.name,
+    headers: context.request.headers,
+    body: context.request.body,
+  });
   setSuccess(context, 200, {});
 }
 

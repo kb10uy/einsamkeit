@@ -10,10 +10,11 @@ import * as Queue from 'bull';
 import { EinsamkeitJob } from './job/types';
 import * as Redis from 'ioredis';
 import axios, { AxiosInstance } from 'axios';
-import { Options } from 'pug';
+import { Options, renderFile } from 'pug';
 
 const server = config.get<any>('server');
 const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
+const pugRoot = path.resolve(process.cwd(), 'client/templates/');
 let logger: log4js.Logger;
 let knex: Knex;
 let queue: Queue.Queue<EinsamkeitJob>;
@@ -24,10 +25,18 @@ let axiosActivityPub: AxiosInstance;
  * Pug のオプション
  */
 export const pugDefaultOption: Options = {
-  basedir: path.resolve(process.cwd(), 'client/templates'),
   cache: false,
   pretty: true,
 };
+
+/**
+ * Pug ファイルを描画する
+ * @param {string} relp pug ファイルのパス
+ * @param {*} local データ
+ */
+export function renderPug(relp: string, local?: any): string {
+  return renderFile(path.resolve(pugRoot, relp), { ...pugDefaultOption, ...local });
+}
 
 /**
  * 出力可能なロガーを取得

@@ -1,6 +1,6 @@
 import * as Pug from 'pug';
 import { EinsamkeitContext, EinsamkeitMiddleware } from '../types';
-import { setSuccess, pugDefaultOption } from '../util';
+import { setSuccess, pugDefaultOption, renderPug } from '../util';
 
 /**
  * Accept ヘッダで text/html が優先されていた場合、指定された Middleware にジャンプする。
@@ -19,8 +19,5 @@ export function maybeReturnHtml(jumpTo: EinsamkeitMiddleware): EinsamkeitMiddlew
  * @param context context
  */
 export async function index(context: EinsamkeitContext): Promise<void> {
-  Pug.renderFile('index.pug', {
-    ...pugDefaultOption,
-  });
-  setSuccess(context, 200, {});
+  setSuccess(context, 200, renderPug('index.pug', {}));
 }

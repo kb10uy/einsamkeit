@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ReceiveFollowJob, SendAcceptJob } from './types';
+import { ReceiveFollowJob, SendAcceptJob, ReceiveUnfollowJob } from './types';
 import { resolveLocalUser, fetchRemoteUser } from '../action/user';
 import { getQueue, getLogger, resolveLocalUrl, getRedis, getKnex } from '../util';
 import { generateHttpSignature } from '../action/auth';
@@ -58,6 +58,34 @@ export async function receiveFollow(data: ReceiveFollowJob): Promise<void> {
       },
     });
     logger.info(`Remote user #${actor.id} followed local user #${target.id}`);
+  }
+}
+
+/**
+ * Undo Follow Activity の処理
+ * @param data ReceiveUnfollowJob
+ */
+export async function receiveUnfollow(data: ReceiveUnfollowJob): Promise<void> {
+  if (typeof data.target !== 'string') throw new Error('The target is not a string. Unsupported.');
+  if (typeof data.actor !== 'string') throw new Error('The actor is not a string. Unsupported.');
+
+  const target = await resolveLocalUser(data.target);
+  if (!target) throw new Error(`User ${data.target} not found`);
+
+  const actor = await fetchRemoteUser(data.actor);
+  const [follower] = await knex('followers')
+    .select('id')
+    .where('local_user_id', target.id)
+    .where('remote_user_id', actor.id);
+  if (!follower) {
+    logger.info(`Remote user #${actor.id} is not follwing local user #${target.id}`);
+  } else {
+    // Redis と DB のフォロワー情報を更新
+    await redis.hincrby(`userstats:${target.id}`, 'followers', -1);
+    await knex('followers')
+      .delete()
+      .where('id', follower.id);
+    logger.info(`Remote user #${actor.id} unfollowed local user #${target.id}`);
   }
 }
 

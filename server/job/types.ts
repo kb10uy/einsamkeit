@@ -24,4 +24,10 @@ export interface ReceiveFollowJob extends JobBase {
   actor: any;
 }
 
-export type EinsamkeitJob = SendAcceptJob | SendFollowJob | ReceiveFollowJob;
+export interface ReceiveUnfollowJob extends JobBase {
+  type: 'receiveUnfollow';
+  target: any;
+  actor: any;
+}
+
+export type EinsamkeitJob = SendAcceptJob | SendFollowJob | ReceiveFollowJob | ReceiveUnfollowJob;

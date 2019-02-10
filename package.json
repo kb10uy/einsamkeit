@@ -8,8 +8,8 @@
     "build": "webpack --mode development",
     "watch": "webpack --mode development --watch",
     "blahctl": "ts-node -P ./tsconfig.json ./server/blahctl.ts",
-    "server:web": "ts-node -P ./tsconfig.json -D 7016 ./server/web.ts",
-    "server:queue": "ts-node -P ./tsconfig.json -D 7016 ./server/queue.ts",
+    "server:web": "ts-node -P ./tsconfig.json ./server/web.ts",
+    "server:queue": "ts-node -P ./tsconfig.json ./server/queue.ts",
     "migration:make": "knex --knexfile knexfile.ts -x ts migrate:make",
     "migration:run": "knex --knexfile knexfile.ts migrate:latest",
     "migration:rollback": "knex --knexfile knexfile.ts migrate:rollback"

@@ -19,6 +19,9 @@ worker.process(concurrency, async (job: Queue.Job<EinsamkeitJob>) => {
       case 'sendAccept':
         await jobUser.sendAccept(job.data);
         break;
+      case 'sendUndo':
+        await jobUser.sendUndo(job.data);
+        break;
       case 'sendFollow':
         await jobUser.sendFollow(job.data);
         break;

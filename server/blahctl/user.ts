@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { promisify } from 'util';
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
-import { getKnex, getAPAxios, getQueue, resolveLocalUrl } from '../util';
+import { getKnex, getAPAxios, getQueue, resolveLocalUrl, getRedis } from '../util';
 import { DbLocalUser } from '../action/types';
 import { fetchRemoteUser } from '../action/user';
 
@@ -66,7 +66,7 @@ export async function followRemoteUser(): Promise<void> {
   const apaxios = getAPAxios();
   const queue = getQueue();
 
-  const users: Partial<DbLocalUser>[] = await knex('users').select('id', 'name', 'display_name');
+  const users: Partial<DbLocalUser>[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
   if (users.length === 0) process.exit(0);
 
   console.log(chalk.green('Follow a remote user.'));
@@ -122,7 +122,7 @@ export async function followRemoteUser(): Promise<void> {
   if (pendingInfo) {
     console.log(chalk.green(`Follow request is already sent at ${pendingInfo.sent_at}`));
   } else {
-    const [{ id, sent_at }] = await knex('follow_requests').insert(
+    const [{ id, sent_at }] = await knex('pending_follows').insert(
       {
         remote_user_id: remoteUser.id,
         local_user_id: localUser.id,
@@ -135,12 +135,98 @@ export async function followRemoteUser(): Promise<void> {
       id: resolveLocalUrl(`/id/follow-requests/${id}`),
       targetInbox: remoteUser.server.sharedInbox || remoteUser.inbox,
       privateKey: {
-        key: localUser.privateKey,
+        key: (localUser as DbLocalUser).key_private,
         id: resolveLocalUrl(`/users/${localUser.name}#publickey`),
       },
       actor: resolveLocalUrl(`/users/${localUser.name}`),
       object: remoteUser.userId,
     });
-    console.log(chalk.green(`Sent follow requrest at ${sent_at}`));
+    console.log(chalk.green(`Sent follow requrest at ${sent_at.toUTCString()}`));
   }
+  process.exit(0);
+}
+
+/**
+ * リモートユーザーをアンフォローする
+ */
+export async function UnfollowRemoteUser(): Promise<void> {
+  const knex = getKnex();
+  const queue = getQueue();
+  const redis = getRedis();
+
+  const users: Partial<DbLocalUser>[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
+  if (users.length === 0) process.exit(0);
+
+  console.log(chalk.green('Unfollow a remote user.'));
+  const { localUser } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'localUser',
+      message: 'Unollow from...',
+      choices: users.map((u) => ({
+        name: `#${u.id} ${u.display_name} (@${u.name})`,
+        value: u,
+        short: `@${u.name}`,
+      })),
+    },
+  ]);
+
+  const followings = await knex('remote_users')
+    .select({
+      id: 'remote_users.id',
+      name: 'remote_users.name',
+      display_name: 'remote_users.display_name',
+      user_id: 'remote_users.user_id',
+      domain: 'servers.domain',
+      inbox: 'remote_users.inbox',
+      shared_inbox: 'servers.shared_inbox',
+    })
+    .join('servers', 'servers.id', 'remote_users.server_id')
+    .rightJoin('followings', 'followings.remote_user_id', 'remote_users.id')
+    .where('followings.local_user_id', (localUser as DbLocalUser).id);
+
+  const { userToUnfollow } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'userToUnfollow',
+      message: 'Select a user to unfollow',
+      choices: followings.map((f: any) => ({
+        name: `${f.display_name} (${f.name}@${f.domain})`,
+        value: f,
+        short: `${f.name}@${f.domain}`,
+      })),
+    },
+  ]);
+  const { confirmed } = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'confirmed',
+      message: 'Are you sure?',
+      default: true,
+    },
+  ]);
+  if (!confirmed) process.exit(0);
+
+  const me = resolveLocalUrl(`/users/${localUser.name}`);
+  await redis.hincrby(`userstats:${localUser.id}`, 'following', -1);
+  await knex('followings')
+    .where('local_user_id', localUser.id)
+    .where('remote_user_id', userToUnfollow.id)
+    .delete();
+  await queue.add({
+    type: 'sendUndo',
+    targetInbox: userToUnfollow.shared_inbox || userToUnfollow.inbox,
+    privateKey: {
+      key: (localUser as DbLocalUser).key_private,
+      id: resolveLocalUrl(`/users/${localUser.name}#publickey`),
+    },
+    actor: me,
+    object: {
+      type: 'Follow',
+      actor: me,
+      object: userToUnfollow.user_id,
+    },
+  });
+
+  process.exit(0);
 }

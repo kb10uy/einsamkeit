@@ -28,6 +28,10 @@ export interface SendAcceptJob extends SendJob {
   type: 'sendAccept';
 }
 
+export interface SendUndoJob extends SendJob {
+  type: 'sendUndo';
+}
+
 export interface ReceiveFollowJob extends JobBase {
   type: 'receiveFollow';
   target: any;
@@ -50,6 +54,7 @@ export type EinsamkeitJob =
   | ProcessInboxJob
   | SendAcceptJob
   | SendFollowJob
+  | SendUndoJob
   | ReceiveFollowJob
   | ReceiveUnfollowJob
   | AcceptedFollowJob;

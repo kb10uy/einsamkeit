@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { ReceiveFollowJob, SendAcceptJob, ReceiveUnfollowJob, SendFollowJob, AcceptedFollowJob } from './types';
+import {
+  ReceiveFollowJob,
+  SendAcceptJob,
+  ReceiveUnfollowJob,
+  SendFollowJob,
+  AcceptedFollowJob,
+  SendUndoJob,
+} from './types';
 import { resolveLocalUser, fetchRemoteUser } from '../action/user';
 import { getQueue, getLogger, resolveLocalUrl, getRedis, getKnex } from '../util';
 import { generateHttpSignature } from '../action/auth';
@@ -183,4 +190,36 @@ export async function sendAccept(data: SendAcceptJob): Promise<void> {
     },
   );
   logger.info(`Sent Accept Activity to ${inbox}`);
+}
+
+/**
+ * Accept Activity の送信
+ * @param data SendAcceptJob
+ */
+export async function sendUndo(data: SendUndoJob): Promise<void> {
+  const inbox = new URL(data.targetInbox);
+  const headers = {
+    '(request-target)': `post ${inbox.pathname}`,
+    host: inbox.host,
+    date: new Date().toUTCString(),
+  };
+  const signature = generateHttpSignature(headers, data.privateKey.key, data.privateKey.id);
+  await axios.post(
+    data.targetInbox,
+    {
+      ...makeASRoot(),
+      type: 'Undo',
+      id: data.id,
+      object: data.object,
+      actor: data.actor,
+    },
+    {
+      headers: {
+        host: headers.host,
+        date: headers.date,
+        signature,
+      },
+    },
+  );
+  logger.info(`Sent Undo Activity to ${inbox}`);
 }

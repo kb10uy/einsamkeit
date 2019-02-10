@@ -1,6 +1,3 @@
 {
-  "eslint.validate": [ "javascript", "javascriptreact", "typescript"],
-  "emmet.includeLanguages": {
-    "nunjucks": "html"
-  }
+  "eslint.validate": [ "javascript", "javascriptreact", "typescript"]
 }

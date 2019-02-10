@@ -1,13 +1,16 @@
+import { URL } from 'url';
+import * as path from 'path';
 import { ParameterizedContext } from 'koa';
 import { EinsamkeitState } from './types';
 import * as log4js from 'log4js';
 import * as config from 'config';
 import * as Knex from 'knex';
 import * as Queue from 'bull';
-import { URL } from 'url';
+
 import { EinsamkeitJob } from './job/types';
 import * as Redis from 'ioredis';
 import axios, { AxiosInstance } from 'axios';
+import { Options } from 'pug';
 
 const server = config.get<any>('server');
 const urlRoot = new URL(`${server.scheme}://${server.domain}/`);
@@ -16,6 +19,15 @@ let knex: Knex;
 let queue: Queue.Queue<EinsamkeitJob>;
 let redis: Redis.Redis;
 let axiosActivityPub: AxiosInstance;
+
+/**
+ * Pug のオプション
+ */
+export const pugDefaultOption: Options = {
+  basedir: path.resolve(process.cwd(), 'client/templates'),
+  cache: false,
+  pretty: true,
+};
 
 /**
  * 出力可能なロガーを取得

@@ -2,9 +2,10 @@ extends layouts/default.pug
 
 block body
   h1.logo Einsamkeit
-  h2 Known users
-  each known in knownUsers
-    .known-user
-      img(src=known.icon, alt=known.name, width="200", height="200")
-      h3 #{known.display_name}
-        small (@#{known.name})
+  .known-users
+    h2 Known users
+    each known in knownUsers
+      .known-user
+        img(src=known.icon, alt=known.name, width="200", height="200")
+        .name #{known.display_name}
+          small (#[a(href=known.user_id) @#{known.name}@#{known.domain}])

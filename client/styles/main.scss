@@ -3,6 +3,40 @@
 
 h1.logo {
   font-family: Playball, serif;
-  font-size: 40pt;
+  font-size: 64pt;
   text-align: center;
+}
+
+.known-users {
+  max-width: 800px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: 32pt;
+    text-align: center;
+  }
+
+  .known-user {
+    display: grid;
+    grid-template-rows: 100px;
+    grid-template-columns: 100px 1fr;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    background-color: rgba($color: #ffa742, $alpha: 0.4);
+    border-radius: 10px;
+
+    .name {
+      grid-column: 2;
+      margin-left: 10px;
+      font-size: 20pt;
+    }
+    img {
+      grid-column: 1;
+      width: 100px;
+      height: 100px;
+      border: 3px solid #888;
+      border-radius: 50%;
+    }
+  }
 }

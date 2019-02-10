@@ -23,8 +23,9 @@ export function maybeReturnHtml(jumpTo: EinsamkeitMiddleware): EinsamkeitMiddlew
  */
 export async function index(context: EinsamkeitContext): Promise<void> {
   const knownUsers: DbLocalUser[] = await knex('remote_users')
-    .select('name', 'display_name', 'icon', 'user_id')
-    .orderBy('id', 'desc')
+    .select('name', 'display_name', 'icon', 'user_id', 'servers.domain as domain')
+    .join('servers', 'remote_users.server_id', 'servers.id')
+    .orderBy('remote_users.id', 'desc')
     .limit(10);
   setSuccess(context, 200, renderPug('index.pug', { knownUsers }));
 }

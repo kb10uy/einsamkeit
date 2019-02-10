@@ -7,7 +7,8 @@ const logger = getLogger();
 
 export async function processInboxActivity(data: ProcessInboxJob): Promise<void> {
   const { headers, body } = data;
-  if (!verifyHttpSignature(headers, `/users/${data.username}/inbox`)) {
+  const verified = await verifyHttpSignature(headers, `post /users/${data.username}/inbox`);
+  if (!verified) {
     throw new Error('Inbox aborted due to invalid HTTP signature');
   }
   switch (body.type) {
@@ -21,6 +22,5 @@ export async function processInboxActivity(data: ProcessInboxJob): Promise<void>
       await processUndoActivity(body);
       break;
   }
-  logger.info(`received: ${JSON.stringify(headers)}`);
   logger.info(`received: ${JSON.stringify(body)}`);
 }

@@ -13,16 +13,6 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('remote_user_id').notNullable();
     table.timestamps();
   });
-  await knex.schema.alterTable('users', (table) => {
-    table
-      .integer('following')
-      .notNullable()
-      .defaultTo(0);
-    table
-      .integer('followers')
-      .notNullable()
-      .defaultTo(0);
-  });
 }
 
 export async function down(knex: Knex): Promise<void> {

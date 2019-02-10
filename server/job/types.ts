@@ -3,6 +3,13 @@ export interface JobBase {
   id?: string;
 }
 
+export interface ProcessInboxJob extends JobBase {
+  type: 'processInbox';
+  username: string;
+  headers: any;
+  body: any;
+}
+
 export interface SendJob extends JobBase {
   targetInbox: string;
   privateKey: {
@@ -11,13 +18,6 @@ export interface SendJob extends JobBase {
   };
   actor: any;
   object: any;
-}
-
-export interface ProcessInboxJob extends JobBase {
-  type: 'processInbox';
-  username: string;
-  headers: any;
-  body: any;
 }
 
 export interface SendFollowJob extends SendJob {
@@ -40,4 +40,16 @@ export interface ReceiveUnfollowJob extends JobBase {
   actor: any;
 }
 
-export type EinsamkeitJob = ProcessInboxJob | SendAcceptJob | SendFollowJob | ReceiveFollowJob | ReceiveUnfollowJob;
+export interface AcceptedFollowJob extends JobBase {
+  type: 'acceptedFollow';
+  object: any;
+  actor: any;
+}
+
+export type EinsamkeitJob =
+  | ProcessInboxJob
+  | SendAcceptJob
+  | SendFollowJob
+  | ReceiveFollowJob
+  | ReceiveUnfollowJob
+  | AcceptedFollowJob;

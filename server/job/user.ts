@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ReceiveFollowJob, SendAcceptJob, ReceiveUnfollowJob, SendFollowJob } from './types';
+import { ReceiveFollowJob, SendAcceptJob, ReceiveUnfollowJob, SendFollowJob, AcceptedFollowJob } from './types';
 import { resolveLocalUser, fetchRemoteUser } from '../action/user';
 import { getQueue, getLogger, resolveLocalUrl, getRedis, getKnex } from '../util';
 import { generateHttpSignature } from '../action/auth';
@@ -119,6 +119,38 @@ export async function sendFollow(data: SendFollowJob): Promise<void> {
     },
   );
   logger.info(`Sent Follow Activity to ${inbox}`);
+}
+
+/**
+ * Accept Follow Activity の受信
+ * @param data AcceptedFollowJob
+ */
+export async function acceptedFollow(data: AcceptedFollowJob): Promise<void> {
+  const localUser = await resolveLocalUser(data.object);
+  const remoteUser = await fetchRemoteUser(data.actor);
+  if (!localUser) throw new Error(`User ${data.object} not found`);
+
+  const [following] = await knex('followings')
+    .select()
+    .where('local_user_id', localUser.id)
+    .where('remote_user_id', remoteUser.id);
+  if (following) {
+    logger.info(`Local user #${localUser.id} is already following remote user #${remoteUser.id}`);
+  } else {
+    // Redis と DB のフォロー情報を更新
+    const now = new Date();
+    await knex('followings').insert({
+      local_user_id: localUser.id,
+      remote_user_id: remoteUser.id,
+      created_at: now,
+      updated_at: now,
+    });
+    await knex('pending_follows')
+      .where('local_user_id', localUser.id)
+      .where('remote_user_id', remoteUser.id)
+      .delete();
+    await redis.hincrby(`userstats:${localUser.id}`, 'following', 1);
+  }
 }
 
 /**

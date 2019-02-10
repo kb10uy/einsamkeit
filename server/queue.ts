@@ -28,6 +28,11 @@ worker.process(concurrency, async (job: Queue.Job<EinsamkeitJob>) => {
         break;
       case 'receiveUnfollow':
         await jobUser.receiveUnfollow(job.data);
+        break;
+
+      case 'acceptedFollow':
+        await jobUser.acceptedFollow(job.data);
+        break;
     }
   } catch (e) {
     logger.error(`Exception thrown: ${e.message}`);

@@ -7,7 +7,21 @@ const logger = getLogger();
  * Accept Activity
  * @param body
  */
-export async function processAcceptActivity(body: any): Promise<void> {}
+export async function processAcceptActivity(body: any): Promise<void> {
+  if (typeof body.object !== 'object') throw new Error('The object of Accept Activity is not an object');
+  switch (body.object.type) {
+    case 'Follow':
+      await queue.add({
+        type: 'acceptedFollow',
+        actor: body.actor,
+        object: body.object.actor,
+      });
+      break;
+    default:
+      logger.info(`Accept ${body.object.type} is unsupported`);
+      break;
+  }
+}
 
 /**
  * Follow Activity

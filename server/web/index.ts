@@ -13,6 +13,8 @@ export function maybeReturnHtml(jumpTo: EinsamkeitMiddleware): EinsamkeitMiddlew
   return async (ctx: EinsamkeitContext, next: () => Promise<any>) => {
     if (ctx.accepts('text/html') === 'text/html') {
       await jumpTo(ctx, next);
+    } else {
+      await next();
     }
   };
 }

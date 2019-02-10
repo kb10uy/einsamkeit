@@ -1,1 +1,8 @@
 @import '~bootstrap/scss/bootstrap-reboot';
+@import url('https://fonts.googleapis.com/css?family=Playball');
+
+h1.logo {
+  font-family: Playball, serif;
+  font-size: 40pt;
+  text-align: center;
+}

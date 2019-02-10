@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { promisify } from 'util';
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
-import { getKnex, getAPAxios } from '../util';
+import { getKnex, getAPAxios, getQueue, resolveLocalUrl } from '../util';
 import { DbLocalUser } from '../action/types';
 import { fetchRemoteUser } from '../action/user';
 
@@ -64,6 +64,7 @@ export async function followRemoteUser(): Promise<void> {
   const acctRegex = /^([a-zA-Z0-9_]+)@([a-zA-Z0-9\-\.]+)$/;
   const knex = getKnex();
   const apaxios = getAPAxios();
+  const queue = getQueue();
 
   const users: Partial<DbLocalUser>[] = await knex('users').select('id', 'name', 'display_name');
   if (users.length === 0) process.exit(0);
@@ -121,10 +122,25 @@ export async function followRemoteUser(): Promise<void> {
   if (pendingInfo) {
     console.log(chalk.green(`Follow request is already sent at ${pendingInfo.sent_at}`));
   } else {
-    await knex('follow_requests').insert({
-      remote_user_id: remoteUser.id,
-      local_user_id: localUser.id,
-      sent_at: now,
+    const [{ id, sent_at }] = await knex('follow_requests').insert(
+      {
+        remote_user_id: remoteUser.id,
+        local_user_id: localUser.id,
+        sent_at: now,
+      },
+      '*',
+    );
+    await queue.add({
+      type: 'sendFollow',
+      id: resolveLocalUrl(`/id/follow-requests/${id}`),
+      targetInbox: remoteUser.server.sharedInbox || remoteUser.inbox,
+      privateKey: {
+        key: localUser.privateKey,
+        id: resolveLocalUrl(`/users/${localUser.name}#publickey`),
+      },
+      actor: resolveLocalUrl(`/users/${localUser.name}`),
+      object: remoteUser.userId,
     });
+    console.log(chalk.green(`Sent follow requrest at ${sent_at}`));
   }
 }

@@ -20,6 +20,7 @@ worker.process(concurrency, async (job: Queue.Job<EinsamkeitJob>) => {
         await jobUser.sendAccept(job.data);
         break;
       case 'sendFollow':
+        await jobUser.sendFollow(job.data);
         break;
 
       case 'receiveFollow':

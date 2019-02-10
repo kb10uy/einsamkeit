@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ReceiveFollowJob, SendAcceptJob, ReceiveUnfollowJob } from './types';
+import { ReceiveFollowJob, SendAcceptJob, ReceiveUnfollowJob, SendFollowJob } from './types';
 import { resolveLocalUser, fetchRemoteUser } from '../action/user';
 import { getQueue, getLogger, resolveLocalUrl, getRedis, getKnex } from '../util';
 import { generateHttpSignature } from '../action/auth';
@@ -89,6 +89,42 @@ export async function receiveUnfollow(data: ReceiveUnfollowJob): Promise<void> {
   }
 }
 
+/**
+ * Follow Activity の送信
+ * @param data SendFollowJob
+ */
+export async function sendFollow(data: SendFollowJob): Promise<void> {
+  const inbox = new URL(data.targetInbox);
+  const headers = {
+    '(request-target)': `post ${inbox.pathname}`,
+    host: inbox.host,
+    date: new Date().toUTCString(),
+  };
+  const signature = generateHttpSignature(headers, data.privateKey.key, data.privateKey.id);
+  await axios.post(
+    data.targetInbox,
+    {
+      ...makeASRoot(),
+      type: 'Follow',
+      id: data.id,
+      object: data.object,
+      actor: data.actor,
+    },
+    {
+      headers: {
+        host: headers.host,
+        date: headers.date,
+        signature,
+      },
+    },
+  );
+  logger.info(`Sent Follow Activity to ${inbox}`);
+}
+
+/**
+ * Accept Activity の送信
+ * @param data SendAcceptJob
+ */
 export async function sendAccept(data: SendAcceptJob): Promise<void> {
   const inbox = new URL(data.targetInbox);
   const headers = {
@@ -97,7 +133,7 @@ export async function sendAccept(data: SendAcceptJob): Promise<void> {
     date: new Date().toUTCString(),
   };
   const signature = generateHttpSignature(headers, data.privateKey.key, data.privateKey.id);
-  const response = await axios.post(
+  await axios.post(
     data.targetInbox,
     {
       ...makeASRoot(),

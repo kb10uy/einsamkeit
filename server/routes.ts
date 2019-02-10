@@ -16,4 +16,6 @@ export function defineRoutes(router: KoaRouter<EinsamkeitState>): void {
   router.get('/users/:user/outbox', apiUser.checkUser, apiUser.outbox);
   router.get('/users/:user/following', apiUser.checkUser, apiUser.following);
   router.get('/users/:user/followers', apiUser.checkUser, apiUser.followers);
+
+  // /id/* は Activity ID 用に予約
 }

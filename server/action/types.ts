@@ -17,6 +17,7 @@ export interface DbRemoteUser extends DbObject {
   display_name: string;
   key_public: string;
   inbox: string;
+  icon: string;
 }
 
 export interface DbLocalUser extends DbObject {
@@ -24,6 +25,7 @@ export interface DbLocalUser extends DbObject {
   display_name: string;
   key_public: string;
   key_private: string;
+  icon: string;
 }
 
 export interface Server extends DbObject {

@@ -10,6 +10,7 @@ export interface StateUser {
   display_name: string;
   key_public: string;
   key_private: string;
+  icon: string;
 }
 
 /**

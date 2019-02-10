@@ -1,7 +1,6 @@
 import { setSuccess, getLogger, getKnex, setError, resolveLocalUrl, getQueue } from '../util';
 import { EinsamkeitContext } from '../types';
 import { makeASRoot } from '../ap/activitystreams';
-import { processAcceptActivity, processFollowActivity, processUndoActivity } from '../ap/activity';
 
 const logger = getLogger();
 const queue = getQueue();
@@ -16,7 +15,7 @@ export async function checkUser(context: EinsamkeitContext, next: () => Promise<
   const username = context.params.user;
 
   const [user] = await knex('users')
-    .select('id', 'name', 'display_name', 'key_public', 'key_private')
+    .select('id', 'name', 'display_name', 'key_public', 'key_private', 'icon')
     .where('name', username);
   if (user) {
     context.state.user = user;
@@ -50,6 +49,10 @@ export async function user(context: EinsamkeitContext): Promise<void> {
       id: resolveLocalUrl(`/users/${user.name}#publickey`),
       owner: resolveLocalUrl(`/users/${user.name}`),
       publicKeyPem: user.key_public,
+    },
+    icon: {
+      type: 'Image',
+      url: user.icon,
     },
   });
 }

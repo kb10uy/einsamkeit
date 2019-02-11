@@ -50,6 +50,7 @@ export async function createUser(): Promise<void> {
       created_at: now,
       updated_at: now,
     });
+    console.log(chalk.green(`User ${answers.username} created!`));
   } catch (e) {
     console.log(chalk.red(e.message));
     process.exit(1);

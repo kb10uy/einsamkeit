@@ -1,50 +1,34 @@
 export interface DbObject {
-  id: number;
-  created_at: Date;
-  updated_at: Date;
+  id?: number;
+  created_at?: Date;
+  updated_at?: Date;
+  [x: string]: any;
 }
 
-export interface DbServer extends DbObject {
-  scheme: string;
-  domain: string;
-  shared_inbox: string;
-}
-
-export interface DbRemoteUser extends DbObject {
-  user_id: string;
-  server_id: string;
-  name: string;
-  display_name: string;
-  key_public: string;
-  inbox: string;
-  icon: string;
-}
-
-export interface DbLocalUser extends DbObject {
-  name: string;
-  display_name: string;
-  key_public: string;
-  key_private: string;
-  icon: string;
-}
-
-export interface Server extends DbObject {
-  baseUrl: string;
-  sharedInbox?: string;
-}
-
-export interface RemoteUser extends DbObject {
-  userId: string;
-  server: Server;
-  name: string;
-  displayName: string;
-  publicKey?: string;
-  inbox: string;
-}
-
-export interface LocalUser extends DbObject {
-  name: string;
-  displayName: string;
-  publicKey: string;
-  privateKey: string;
-}
+export const DbKeysMergeIgnored = ['id', 'created_at', 'udpated_at'];
+export const DbKeysUsers = [
+  'id',
+  'created_at',
+  'udpated_at',
+  'name',
+  'display_name',
+  'icon',
+  'key_public',
+  'key_private',
+];
+export const DbKeysRemoteUsers = [
+  'id',
+  'created_at',
+  'udpated_at',
+  'name',
+  'display_name',
+  'icon',
+  'user_id',
+  'key_public',
+  'key_id',
+  'inbox',
+];
+export const DbKeysServers = ['id', 'created_at', 'udpated_at', 'scheme', 'domain', 'shared_inbox'];
+export const DbKeysFollowings = ['id', 'created_at', 'udpated_at', 'local_user_id', 'remote_user_id'];
+export const DbKeysFollowers = ['id', 'created_at', 'udpated_at', 'local_user_id', 'remote_user_id'];
+export const DbKeysPendingFollows = ['id', 'created_at', 'udpated_at', 'local_user_id', 'remote_user_id'];

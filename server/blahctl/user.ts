@@ -3,8 +3,8 @@ import { promisify } from 'util';
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
 import { getKnex, getAPAxios, getQueue, resolveLocalUrl, getRedis } from '../util';
-import { DbLocalUser, DbRemoteUser } from '../action/types';
-import { fetchRemoteUser } from '../action/user';
+import { fetchRemoteUserByUserId } from '../action/user';
+import { DbObject } from '../action/types';
 
 /**
  * 新規ユーザーを追加する
@@ -66,7 +66,7 @@ export async function followRemoteUser(): Promise<void> {
   const apaxios = getAPAxios();
   const queue = getQueue();
 
-  const users: Partial<DbLocalUser>[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
+  const users: DbObject[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
   if (users.length === 0) process.exit(0);
 
   console.log(chalk.green('Follow a remote user.'));
@@ -101,9 +101,14 @@ export async function followRemoteUser(): Promise<void> {
     console.log(chalk.red(`Error: ${e.message}`));
   }
 
-  const remoteUser = await fetchRemoteUser(self.href);
+  const remoteUser = await fetchRemoteUserByUserId(self.href);
+  if (!remoteUser) {
+    console.log(chalk.red('Remote user not found!'));
+    // なんで process.exit は never なのに if 出たらまた undefined が付いてくるんだよ
+    throw new Error('Aborted');
+  }
   console.log(chalk.green('Remote user found!'));
-  console.log(chalk.bold.white(`${remoteUser.displayName} (@${remoteUser.name}@${remoteUserInfo[2]})`));
+  console.log(chalk.bold.white(`${remoteUser.display_name} (@${remoteUser.name}@${remoteUserInfo[2]})`));
   const { confirmed } = await inquirer.prompt([
     {
       type: 'confirm',
@@ -117,8 +122,8 @@ export async function followRemoteUser(): Promise<void> {
   const now = new Date();
   const [pendingInfo] = await knex('pending_follows')
     .select()
-    .where('remote_user_id', remoteUser.id)
-    .where('local_user_id', localUser.id);
+    .where('remote_user_id', remoteUser.id || 0)
+    .where('local_user_id', localUser.id || 0);
   if (pendingInfo) {
     console.log(chalk.green(`Follow request is already sent at ${pendingInfo.sent_at}`));
   } else {
@@ -133,13 +138,13 @@ export async function followRemoteUser(): Promise<void> {
     await queue.add({
       type: 'sendFollow',
       id: resolveLocalUrl(`/id/follow-requests/${id}`),
-      targetInbox: remoteUser.server.sharedInbox || remoteUser.inbox,
+      targetInbox: remoteUser.server.shared_inbox || remoteUser.inbox,
       privateKey: {
-        key: (localUser as DbLocalUser).key_private,
+        key: localUser.key_private,
         id: resolveLocalUrl(`/users/${localUser.name}#publickey`),
       },
       actor: resolveLocalUrl(`/users/${localUser.name}`),
-      object: remoteUser.userId,
+      object: remoteUser.user_id,
     });
     console.log(chalk.green(`Sent follow requrest at ${sent_at.toUTCString()}`));
   }
@@ -154,7 +159,7 @@ export async function UnfollowRemoteUser(): Promise<void> {
   const queue = getQueue();
   const redis = getRedis();
 
-  const users: Partial<DbLocalUser>[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
+  const users: DbObject[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
   if (users.length === 0) process.exit(0);
 
   console.log(chalk.green('Unfollow a remote user.'));
@@ -184,7 +189,7 @@ export async function UnfollowRemoteUser(): Promise<void> {
     .select(knex.raw('0 as pending'))
     .join('servers', 'servers.id', 'remote_users.server_id')
     .rightJoin('followings', 'followings.remote_user_id', 'remote_users.id')
-    .where('followings.local_user_id', (localUser as DbLocalUser).id)
+    .where('followings.local_user_id', localUser.id)
     .union(
       knex('remote_users')
         .select({
@@ -243,7 +248,7 @@ export async function UnfollowRemoteUser(): Promise<void> {
     type: 'sendUndo',
     targetInbox: userToUnfollow.shared_inbox || userToUnfollow.inbox,
     privateKey: {
-      key: (localUser as DbLocalUser).key_private,
+      key: localUser.key_private,
       id: resolveLocalUrl(`/users/${localUser.name}#publickey`),
     },
     actor: me,
@@ -269,7 +274,7 @@ export async function updateRemoteUser(): Promise<void> {
 
   console.log(chalk.green('Updates all known remote users.'));
 
-  const remoteUsers: DbRemoteUser[] = await knex('remote_users').select();
+  const remoteUsers: DbObject[] = await knex('remote_users').select();
   for (const remoteUser of remoteUsers) {
     const { data: userResult } = await apaxios.get(remoteUser.user_id);
 
@@ -284,13 +289,14 @@ export async function updateRemoteUser(): Promise<void> {
     }
 
     const now = new Date();
-    const [newUser]: [DbRemoteUser] = await knex('remote_users')
-      .where('id', remoteUser.id)
+    const [newUser]: [DbObject] = await knex('remote_users')
+      .where('id', remoteUser.id || 0)
       .update(
         {
           name: userResult.preferredUsername,
           display_name: userResult.name,
           icon: userResult.icon && userResult.icon.url,
+          keyId: userResult.publicKey && userResult.publicKey.id,
           updated_at: now,
         },
         '*',

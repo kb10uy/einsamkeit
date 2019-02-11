@@ -118,6 +118,7 @@ async function registerRemoteUser(personData: any): Promise<DbObject> {
       name: personData.preferredUsername || personData.name,
       display_name: personData.name,
       key_public: personData.publicKey ? personData.publicKey.publicKeyPem : null,
+      key_id: personData.publicKey ? personData.publicKey.id : null,
       inbox: personData.inbox,
       icon: personData.icon && personData.icon.url,
       created_at: now,

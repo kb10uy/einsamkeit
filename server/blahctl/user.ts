@@ -28,6 +28,12 @@ export async function createUser(): Promise<void> {
     },
     {
       type: 'input',
+      name: 'iconUrl',
+      message: 'Avatar URL',
+      validate: (n: string) => n.length >= 10,
+    },
+    {
+      type: 'input',
       name: 'publicKeyFilename',
       message: 'Path to public key',
     },
@@ -139,7 +145,7 @@ export async function followRemoteUser(): Promise<void> {
     await queue.add({
       type: 'sendFollow',
       id: resolveLocalUrl(`/id/follow-requests/${id}`),
-      targetInbox: remoteUser.server.shared_inbox || remoteUser.inbox,
+      targetInbox: remoteUser.server_shared_inbox || remoteUser.inbox,
       privateKey: {
         key: localUser.key_private,
         id: resolveLocalUrl(`/users/${localUser.name}#publickey`),

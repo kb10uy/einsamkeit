@@ -98,10 +98,10 @@ export function getAPAxios(): AxiosInstance {
   });
   axiosActivityPub.interceptors.response.use((response) => {
     const type: string = response.headers['content-type'] || 'text/html';
-    if (type.match(/application\/((ld|activity)\+)?json/)) {
+    if (type.match(/application\/(\w+\+)?json/)) {
       return response;
     } else {
-      throw new Error('Response is not JSON');
+      throw new Error(`Response is not JSON: ${type} returned`);
     }
   });
   return axiosActivityPub;

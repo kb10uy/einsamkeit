@@ -1,7 +1,7 @@
 import * as config from 'config';
 import { URL } from 'url';
 import { getKnex, getLogger, getAPAxios } from '../util';
-import { DbObject, DbKeysUsers, DbKeysServers } from './types';
+import { DbObject, DbKeysUsers, DbKeysServers, DbKeysRemoteUsers } from './types';
 
 const localUserRegex = new RegExp(
   `${config.get('server.scheme')}://${config.get('server.domain')}/users/([a-zA-Z0-9_]{1,128})`,
@@ -27,16 +27,7 @@ export async function resolveLocalUser(userId: string): Promise<DbObject | undef
     .select(DbKeysUsers)
     .where('name', match[1]);
   if (!dbuser) return undefined;
-  return {
-    id: dbuser.id,
-    created: dbuser.created_at,
-    updated: dbuser.updated_at,
-    name: dbuser.name,
-    displayName: dbuser.display_name,
-    icon: dbuser.icon,
-    publicKey: dbuser.key_public,
-    privateKey: dbuser.key_private,
-  };
+  return dbuser;
 }
 
 /**
@@ -51,7 +42,7 @@ export async function fetchRemoteUserByKeyId(keyId: string): Promise<DbObject | 
   let [dbData] = await knex('remote_users')
     .join('servers', 'remote_users.server_id', 'servers.id')
     .select([
-      ...DbKeysUsers.map((k) => `remote_users.${k} as ${k}`),
+      ...DbKeysRemoteUsers.map((k) => `remote_users.${k} as ${k}`),
       ...DbKeysServersToUsers.map((k) => `servers.${k} as server_${k}`),
     ])
     .where('remote_users.key_id', keyId);
@@ -86,7 +77,7 @@ export async function fetchRemoteUserByUserId(userId: string): Promise<DbObject 
   let [dbData] = await knex('remote_users')
     .join('servers', 'remote_users.server_id', 'servers.id')
     .select([
-      ...DbKeysUsers.map((k) => `remote_users.${k} as ${k}`),
+      ...DbKeysRemoteUsers.map((k) => `remote_users.${k} as ${k}`),
       ...DbKeysServersToUsers.map((k) => `servers.${k} as server_${k}`),
     ])
     .where('remote_users.user_id', userId);

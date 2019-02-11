@@ -50,7 +50,7 @@ export async function receiveFollow(data: ReceiveFollowJob): Promise<void> {
     });
 
     // 自動 Accept なので送るだけ
-    const inbox = actor.server.shared_inbox || actor.inbox;
+    const inbox = actor.server_shared_inbox || actor.inbox;
     await queue.add({
       id: '',
       type: 'sendAccept',
@@ -164,6 +164,7 @@ export async function acceptedFollow(data: AcceptedFollowJob): Promise<void> {
       .where('remote_user_id', remoteUser.id || 0)
       .delete();
     await redis.hincrby(`userstats:${localUser.id}`, 'following', 1);
+    logger.info(`Accepted Follow Activity ${localUser.name} -> ${remoteUser.name}@${remoteUser.server_domain}`);
   }
 }
 

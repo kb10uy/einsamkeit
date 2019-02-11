@@ -5,11 +5,11 @@ export interface DbObject {
   [x: string]: any;
 }
 
-export const DbKeysMergeIgnored = ['id', 'created_at', 'udpated_at'];
+export const DbKeysMergeIgnored = ['id', 'created_at', 'updated_at'];
 export const DbKeysUsers = [
   'id',
   'created_at',
-  'udpated_at',
+  'updated_at',
   'name',
   'display_name',
   'icon',
@@ -19,7 +19,7 @@ export const DbKeysUsers = [
 export const DbKeysRemoteUsers = [
   'id',
   'created_at',
-  'udpated_at',
+  'updated_at',
   'name',
   'display_name',
   'icon',
@@ -28,7 +28,7 @@ export const DbKeysRemoteUsers = [
   'key_id',
   'inbox',
 ];
-export const DbKeysServers = ['id', 'created_at', 'udpated_at', 'scheme', 'domain', 'shared_inbox'];
-export const DbKeysFollowings = ['id', 'created_at', 'udpated_at', 'local_user_id', 'remote_user_id'];
-export const DbKeysFollowers = ['id', 'created_at', 'udpated_at', 'local_user_id', 'remote_user_id'];
-export const DbKeysPendingFollows = ['id', 'created_at', 'udpated_at', 'local_user_id', 'remote_user_id'];
+export const DbKeysServers = ['id', 'created_at', 'updated_at', 'scheme', 'domain', 'shared_inbox'];
+export const DbKeysFollowings = ['id', 'created_at', 'updated_at', 'local_user_id', 'remote_user_id'];
+export const DbKeysFollowers = ['id', 'created_at', 'updated_at', 'local_user_id', 'remote_user_id'];
+export const DbKeysPendingFollows = ['id', 'created_at', 'updated_at', 'local_user_id', 'remote_user_id'];

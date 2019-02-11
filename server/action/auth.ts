@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { createSign, createVerify } from 'crypto';
 import { getLogger } from '../util';
-import { fetchRemoteUser } from './user';
+import { fetchRemoteUserByKeyId } from './user';
 import { URL } from 'url';
 
 const logger = getLogger();
@@ -67,11 +67,8 @@ export async function verifyHttpSignature(headers: { [x: string]: string }, requ
   }
 
   // 鍵を持ってくる
-  // TODO: keyId を <user_id>#publicKey 形式しか想定していないので相手実装によっては破綻する
-  const targetUserId = new URL(signatureProps.get('keyId') || '');
-  targetUserId.hash = '';
-  const { publicKey } = await fetchRemoteUser(targetUserId.href);
-  if (!publicKey) return true;
+  const remoteUser = await fetchRemoteUserByKeyId(signatureProps.get('keyId') || '');
+  if (!remoteUser || !remoteUser.key_public) return true;
 
   // 検証する
   const algorithm = signatureProps.get('algorithm') || 'rsa-sha256';
@@ -79,7 +76,7 @@ export async function verifyHttpSignature(headers: { [x: string]: string }, requ
   const signature = signatureProps.get('signature') || '';
   const verifier = createVerify(algorithm);
   verifier.update(data);
-  const verified = verifier.verify(publicKey, signature, 'base64');
+  const verified = verifier.verify(remoteUser.key_public, signature, 'base64');
   if (!verified) {
     logger.warn(`Failed to verify signature "${signature}"`);
   }

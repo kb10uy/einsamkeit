@@ -65,6 +65,7 @@ export async function fetchRemoteUserByKeyId(keyId: string): Promise<DbObject | 
         // とりあえず blahctl でなんとかしてもらうしかない
         return fetchRemoteUserByUserId(keyData.id);
       case 'Key':
+        // Misskey などは keyId にアクセスすると本当に Key を返してくる
         return fetchRemoteUserByUserId(keyData.owner);
     }
   } catch (e) {

@@ -98,7 +98,7 @@ export function getAPAxios(): AxiosInstance {
   });
   axiosActivityPub.interceptors.response.use((response) => {
     const type: string = response.headers['content-type'] || 'text/html';
-    if (type.match(/a/)) {
+    if (type.match(/application\/((ld|activity)\+)?json/)) {
       return response;
     } else {
       throw new Error('Response is not JSON');

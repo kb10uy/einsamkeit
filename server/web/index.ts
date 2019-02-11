@@ -1,7 +1,6 @@
-import * as Pug from 'pug';
 import { EinsamkeitContext, EinsamkeitMiddleware } from '../types';
-import { setSuccess, pugDefaultOption, renderPug, getKnex } from '../util';
-import { DbLocalUser } from '../action/types';
+import { setSuccess, renderPug, getKnex } from '../util';
+import { DbObject } from '../action/types';
 
 const knex = getKnex();
 
@@ -24,7 +23,7 @@ export function maybeReturnHtml(jumpTo: EinsamkeitMiddleware): EinsamkeitMiddlew
  * @param context context
  */
 export async function index(context: EinsamkeitContext): Promise<void> {
-  const knownUsers: DbLocalUser[] = await knex('remote_users')
+  const knownUsers: DbObject[] = await knex('remote_users')
     .select('name', 'display_name', 'icon', 'user_id', 'servers.domain as domain')
     .join('servers', 'remote_users.server_id', 'servers.id')
     .orderBy('remote_users.id', 'desc')

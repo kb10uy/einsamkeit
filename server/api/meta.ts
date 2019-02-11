@@ -47,7 +47,7 @@ export async function webfinger(context: EinsamkeitContext): Promise<void> {
 
   if (user) {
     setSuccess(context, 200, {
-      subject: targetUri,
+      subject: `acct:${username}@${server.domain}`,
       links: [
         {
           rel: 'self',

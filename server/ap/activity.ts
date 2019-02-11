@@ -33,6 +33,7 @@ export async function processFollowActivity(body: any): Promise<void> {
     type: 'receiveFollow',
     actor: body.actor,
     target: body.object,
+    id: body.id,
   });
 }
 

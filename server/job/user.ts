@@ -7,7 +7,7 @@ import {
   AcceptedFollowJob,
   SendUndoJob,
 } from './types';
-import { resolveLocalUser, fetchRemoteUser } from '../action/user';
+import { resolveLocalUser, fetchRemoteUserByUserId } from '../action/user';
 import { getQueue, getLogger, resolveLocalUrl, getRedis, getKnex } from '../util';
 import { generateHttpSignature } from '../action/auth';
 import { URL } from 'url';
@@ -29,12 +29,13 @@ export async function receiveFollow(data: ReceiveFollowJob): Promise<void> {
   const target = await resolveLocalUser(data.target);
   if (!target) throw new Error(`User ${data.target} not found`);
 
-  const actor = await fetchRemoteUser(data.actor);
-  const inbox = actor.server.sharedInbox || actor.inbox;
+  const actor = await fetchRemoteUserByUserId(data.actor);
+  if (!actor) throw new Error(`User ${data.actor} not found`);
+
   const [follower] = await knex('followers')
     .select('id')
-    .where('local_user_id', target.id)
-    .where('remote_user_id', actor.id);
+    .where('local_user_id', target.id || 0)
+    .where('remote_user_id', actor.id || 0);
   if (follower) {
     logger.info(`Remote user #${actor.id} is already follwing local user #${target.id}`);
   } else {
@@ -49,17 +50,19 @@ export async function receiveFollow(data: ReceiveFollowJob): Promise<void> {
     });
 
     // 自動 Accept なので送るだけ
+    const inbox = actor.server.shared_inbox || actor.inbox;
     await queue.add({
       id: '',
       type: 'sendAccept',
       targetInbox: inbox,
       privateKey: {
-        key: target.privateKey,
+        key: target.key_private,
         id: resolveLocalUrl(`/users/${target.name}#publickey`),
       },
       actor: data.target,
       object: {
         type: 'Follow',
+        id: data.id,
         actor: data.actor,
         object: data.target,
       },
@@ -79,19 +82,21 @@ export async function receiveUnfollow(data: ReceiveUnfollowJob): Promise<void> {
   const target = await resolveLocalUser(data.target);
   if (!target) throw new Error(`User ${data.target} not found`);
 
-  const actor = await fetchRemoteUser(data.actor);
-  const [follower] = await knex('followers')
+  const actor = await fetchRemoteUserByUserId(data.actor);
+  if (!actor) throw new Error(`User ${data.actor} not found`);
+
+  const [followerInfo] = await knex('followers')
     .select('id')
-    .where('local_user_id', target.id)
-    .where('remote_user_id', actor.id);
-  if (!follower) {
+    .where('local_user_id', target.id || 0)
+    .where('remote_user_id', actor.id || 0);
+  if (!followerInfo) {
     logger.info(`Remote user #${actor.id} is not follwing local user #${target.id}`);
   } else {
     // Redis と DB のフォロワー情報を更新
     await redis.hincrby(`userstats:${target.id}`, 'followers', -1);
     await knex('followers')
       .delete()
-      .where('id', follower.id);
+      .where('id', followerInfo.id);
     logger.info(`Remote user #${actor.id} unfollowed local user #${target.id}`);
   }
 }
@@ -134,14 +139,16 @@ export async function sendFollow(data: SendFollowJob): Promise<void> {
  */
 export async function acceptedFollow(data: AcceptedFollowJob): Promise<void> {
   const localUser = await resolveLocalUser(data.object);
-  const remoteUser = await fetchRemoteUser(data.actor);
   if (!localUser) throw new Error(`User ${data.object} not found`);
 
-  const [following] = await knex('followings')
+  const remoteUser = await fetchRemoteUserByUserId(data.actor);
+  if (!remoteUser) throw new Error(`User ${data.actor} not found`);
+
+  const [followingInfo] = await knex('followings')
     .select()
-    .where('local_user_id', localUser.id)
-    .where('remote_user_id', remoteUser.id);
-  if (following) {
+    .where('local_user_id', localUser.id || 0)
+    .where('remote_user_id', remoteUser.id || 0);
+  if (followingInfo) {
     logger.info(`Local user #${localUser.id} is already following remote user #${remoteUser.id}`);
   } else {
     // Redis と DB のフォロー情報を更新
@@ -153,8 +160,8 @@ export async function acceptedFollow(data: AcceptedFollowJob): Promise<void> {
       updated_at: now,
     });
     await knex('pending_follows')
-      .where('local_user_id', localUser.id)
-      .where('remote_user_id', remoteUser.id)
+      .where('local_user_id', localUser.id || 0)
+      .where('remote_user_id', remoteUser.id || 0)
       .delete();
     await redis.hincrby(`userstats:${localUser.id}`, 'following', 1);
   }

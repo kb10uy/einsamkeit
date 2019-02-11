@@ -303,7 +303,7 @@ export async function updateRemoteUser(): Promise<void> {
           name: userResult.preferredUsername,
           display_name: userResult.name,
           icon: userResult.icon && userResult.icon.url,
-          keyId: userResult.publicKey && userResult.publicKey.id,
+          key_id: userResult.publicKey && userResult.publicKey.id,
           updated_at: now,
         },
         '*',

@@ -1,6 +1,7 @@
 import { setSuccess, getLogger, getKnex, setError, resolveLocalUrl, getQueue } from '../util';
 import { EinsamkeitContext } from '../types';
 import { makeASRoot } from '../ap/activitystreams';
+import { verifyHttpSignature } from '../action/auth';
 
 const logger = getLogger();
 const queue = getQueue();
@@ -65,14 +66,19 @@ export async function inbox(context: EinsamkeitContext): Promise<void> {
   const user = context.state.user;
   if (!user) throw new Error('Precondition failed');
 
-  const body = context.request.body;
-  await queue.add({
-    type: 'processInbox',
-    username: user.name,
-    headers: context.request.headers,
-    body: context.request.body,
-  });
-  setSuccess(context, 200, {});
+  const verified = verifyHttpSignature(context.request.headers, `post /users/${user.name}/inbox`);
+  if (verified) {
+    await queue.add({
+      type: 'processInbox',
+      body: context.request.body,
+    });
+    setSuccess(context, 200, {});
+  } else {
+    logger.warn(`Invalid HTTP signature was sent: ${context.request.headers.signature}`);
+    setError(context, 401, {
+      error: 'Your HTTP signature was invalid.',
+    });
+  }
 }
 
 /**

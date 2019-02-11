@@ -5,8 +5,6 @@ export interface JobBase {
 
 export interface ProcessInboxJob extends JobBase {
   type: 'processInbox';
-  username: string;
-  headers: any;
   body: any;
 }
 

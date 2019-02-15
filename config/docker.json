@@ -1,7 +1,7 @@
 {
   "server": {
-    "scheme": "https",
-    "domain": "6d2495d3.ngrok.io",
+    "scheme": "http",
+    "domain": "localhost",
     "port": 4000
   },
   "encryptionKeys": ["einsamkeit-encryption"],

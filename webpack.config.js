@@ -43,7 +43,12 @@ module.exports = {
       },
     ],
   },
-
+  optimization: {
+    splitChunks: {
+      name: 'vendor',
+      chunks: 'initial',
+    },
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'styles/einsamkeit.css',

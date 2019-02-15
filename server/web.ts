@@ -10,12 +10,21 @@ import * as config from 'config';
 import { defineRoutes } from './routes';
 import { getLogger } from './util';
 import { EinsamkeitState } from './types';
+import { sessionStore } from './web/auth';
 
 const logger = getLogger();
 const port = config.get('server.port');
 const application = new Koa<EinsamkeitState>();
 const router = new KoaRouter<EinsamkeitState>();
-const enableSession = compose([KoaSession({}, application), new KoaCsrf()]);
+const enableSession = compose([
+  KoaSession(
+    {
+      store: sessionStore,
+    },
+    application,
+  ),
+  new KoaCsrf(),
+]);
 const bodyparser = KoaBodyParser({
   extendTypes: {
     json: ['application/activity+json'],
@@ -24,6 +33,8 @@ const bodyparser = KoaBodyParser({
 const serveStatic = KoaStatic(path.resolve(process.cwd(), 'public'), {
   gzip: true,
 });
+
+application.keys = config.get<string[]>('encryptionKeys');
 
 defineRoutes(router, enableSession);
 application.use(bodyparser);

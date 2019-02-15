@@ -1,6 +1,12 @@
 @import '~bootstrap/scss/bootstrap-reboot';
 @import url('https://fonts.googleapis.com/css?family=Playball');
 
+@import './login';
+
+body {
+  background-color: rgb(255, 248, 225);
+}
+
 h1.logo {
   font-family: Playball, serif;
   font-size: 64pt;

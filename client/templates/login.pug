@@ -1,13 +1,20 @@
 extends layouts/default.pug
 
 block body
+  .login-logo
+    img(src="/images/einsamkeit.png", alt="Einsamkeit")
+    .einsamkeit Einsamkeit
+
   .login-form
     h1 ログイン
-    form(action="", method="post")
-      input(type="hidden", name="csrf", value=csrfToken)
+    form(action="/auth/login", method="post")
+      input(type="hidden", name="_csrf", value=csrfToken)
       .login-input
         label(for="username") ユーザー名
         input(type="text", name="username")
       .login-input
         label(for="password") パスワード
         input(type="password", name="password")
+      button(type="submit") ログイン
+    .forget-password
+      | 管理者なんだから自分でパスワードハッシュのカラム書き換えるぐらいのことはやれよマヌケ

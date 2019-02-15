@@ -53,6 +53,11 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'styles/einsamkeit.css',
     }),
-    new CopyWebpackPlugin([]),
+    new CopyWebpackPlugin([
+      {
+        from: './client/images',
+        to: './images',
+      },
+    ]),
   ],
 };

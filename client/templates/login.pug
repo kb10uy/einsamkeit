@@ -1,0 +1,13 @@
+extends layouts/default.pug
+
+block body
+  .login-form
+    h1 ログイン
+    form(action="", method="post")
+      input(type="hidden", name="csrf", value=csrfToken)
+      .login-input
+        label(for="username") ユーザー名
+        input(type="text", name="username")
+      .login-input
+        label(for="password") パスワード
+        input(type="password", name="password")

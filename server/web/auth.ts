@@ -20,10 +20,12 @@ export async function logout(context: EinsamkeitContext): Promise<void> {}
 
 export const sessionStore: stores = {
   async get(key, maxAge, { rolling }) {
-    return redis.get(key);
+    const data = await redis.get(key);
+    return data ? JSON.parse(data) : {};
   },
   async set(key, sess, maxAge, { rolling, changed }) {
-    await redis.set(key, sess);
+    const data = JSON.stringify(sess);
+    await redis.set(key, data);
     if (typeof maxAge === 'number') await redis.expire(key, maxAge);
   },
   async destroy(key) {

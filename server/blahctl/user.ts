@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { promisify } from 'util';
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
+import * as bcrypt from 'bcrypt';
 import { getKnex, getAPAxios, getQueue, resolveLocalUrl, getRedis } from '../util';
 import { fetchRemoteUserByUserId } from '../action/user';
 import { DbObject } from '../action/types';
@@ -61,6 +62,65 @@ export async function createUser(): Promise<void> {
     console.log(chalk.red(e.message));
     process.exit(1);
   }
+  process.exit(0);
+}
+
+/**
+ * パスワードを変更する
+ *
+ * @export
+ * @returns {Promise<void>}
+ */
+export async function changePassword(): Promise<void> {
+  const knex = getKnex();
+
+  const users: DbObject[] = await knex('users').select('id', 'name', 'display_name', 'key_private');
+  if (users.length === 0) process.exit(0);
+
+  console.log(chalk.green('Change the password of a local user.'));
+  const { localUser } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'localUser',
+      message: 'Change that of...',
+      choices: users.map((u) => ({
+        name: `#${u.id} ${u.display_name} (@${u.name})`,
+        value: u,
+        short: `@${u.name}`,
+      })),
+    },
+  ]);
+
+  const { password, passwordConfirm } = await inquirer.prompt([
+    {
+      type: 'password',
+      name: 'password',
+      message: 'Enter a new password',
+      validate: (pw: string) => /[\x00-\x7f]{8,72}/.test(pw),
+    },
+    {
+      type: 'password',
+      name: 'passwordConfirm',
+      message: 'Confirm the password',
+    },
+  ]);
+
+  if (password !== passwordConfirm) {
+    console.log(chalk.red('Password confirmation failed!'));
+    process.exit(1);
+  }
+
+  const now = new Date();
+  const passwordHash = await bcrypt.hash(password, 12);
+  await knex('users')
+    .where('id', localUser.id)
+    .update({
+      password_hash: passwordHash,
+      updated_at: now,
+    });
+
+  console.log(chalk.green('Password changed successfully!'));
+  console.log(chalk.green(`The password hash is "${passwordHash}".`));
   process.exit(0);
 }
 

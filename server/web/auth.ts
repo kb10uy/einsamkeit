@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import { stores } from 'koa-session';
 import { EinsamkeitContext, EinsamkeitMiddleware } from '../types';
 import { setSuccess, renderPug, getRedis } from '../util';

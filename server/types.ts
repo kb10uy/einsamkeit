@@ -1,7 +1,7 @@
 import { ParameterizedContext, Middleware } from 'koa';
 import * as KoaRouter from 'koa-router';
 import { ContextSession } from 'koa-session';
-import * as KoaCsrf from 'koa-csrf';
+import { DbObject } from './action/types';
 
 /**
  * context.state.user
@@ -20,6 +20,10 @@ export interface StateUser {
  */
 export interface EinsamkeitState {
   user?: StateUser;
+}
+
+export interface EinsamkeitSession {
+  user?: DbObject;
 }
 
 type EinsamkeitCustomContext = KoaRouter.IRouterParamContext<EinsamkeitState> & {

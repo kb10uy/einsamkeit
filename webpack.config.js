@@ -1,13 +1,22 @@
+const webpack = require('webpack');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const AutoPrefixer = require('autoprefixer');
 
 module.exports = {
-  entry: ['./client/scripts/main.ts', './client/styles/main.scss'],
+  entry: {
+    einsamkeit: ['./client/scripts/main.ts', './client/styles/main.scss'],
+    admin: './client/admin/admin.tsx',
+  },
+
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'scripts/einsamkeit.js',
+    filename: 'scripts/[name].js',
+  },
+
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
   },
 
   module: {
@@ -44,10 +53,28 @@ module.exports = {
     ],
   },
 
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: 'vendor',
+          chunks: 'initial',
+          enforce: true,
+        },
+      },
+    },
+  },
+
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'styles/einsamkeit.css',
     }),
-    new CopyWebpackPlugin([]),
+    new CopyWebpackPlugin([
+      {
+        from: './client/images',
+        to: './images',
+      },
+    ]),
   ],
 };

@@ -1,0 +1,23 @@
+extends layouts/default.pug
+
+block head
+  meta(name="robots", content="noindex")
+
+block body
+  .login-logo
+    img(src="/images/einsamkeit.png", alt="Einsamkeit")
+    .einsamkeit Einsamkeit
+
+  .login-form
+    h1 ログイン
+    form(action="/auth/login", method="post")
+      input(type="hidden", name="_csrf", value=csrfToken)
+      .login-input
+        label(for="username") ユーザー名
+        input(type="text", name="username", autocomplete="off", required)
+      .login-input
+        label(for="password") パスワード
+        input(type="password", name="password", autocomplete="off", required)
+      button(type="submit") ログイン
+    .forget-password
+      | 管理者なんだから自分でパスワードハッシュのカラム書き換えるぐらいのことはやれよマヌケ

@@ -1,5 +1,7 @@
 import { ParameterizedContext, Middleware } from 'koa';
 import * as KoaRouter from 'koa-router';
+import { ContextSession } from 'koa-session';
+import { DbObject } from './action/types';
 
 /**
  * context.state.user
@@ -20,12 +22,21 @@ export interface EinsamkeitState {
   user?: StateUser;
 }
 
+export interface EinsamkeitSession {
+  user?: DbObject;
+}
+
+type EinsamkeitCustomContext = KoaRouter.IRouterParamContext<EinsamkeitState> & {
+  session?: ContextSession;
+  csrf?: string;
+};
+
 /**
  * Einsamkeit 用の Koa.Context のエイリアス
  */
-export type EinsamkeitContext = ParameterizedContext<EinsamkeitState, KoaRouter.IRouterParamContext<EinsamkeitState>>;
+export type EinsamkeitContext = ParameterizedContext<EinsamkeitState, EinsamkeitCustomContext>;
 
 /**
  * Einsamkeit 用の Koa.Middleware のエイリアス
  */
-export type EinsamkeitMiddleware = Middleware<EinsamkeitState, KoaRouter.IRouterParamContext<EinsamkeitState>>;
+export type EinsamkeitMiddleware = Middleware<EinsamkeitState, EinsamkeitCustomContext>;

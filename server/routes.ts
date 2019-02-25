@@ -1,19 +1,26 @@
 import * as KoaRouter from 'koa-router';
+
 import * as apiMeta from './api/meta';
 import * as apiUser from './api/user';
 import * as webIndex from './web/index';
 import * as webUser from './web/user';
-import { EinsamkeitState } from './types';
+import * as webAuth from './web/auth';
+import { EinsamkeitState, EinsamkeitMiddleware } from './types';
 
 /**
  * 全ルートを定義する
  * @param router router instance
+ * @param enableSession セッションを有効にしたいルートに付ける
  */
-export function defineRoutes(router: KoaRouter<EinsamkeitState>): void {
+export function defineRoutes(router: KoaRouter<EinsamkeitState>, enableSession: EinsamkeitMiddleware): void {
   router.get('/.well-known/host-meta', apiMeta.hostMeta);
   router.get('/.well-known/webfinger', apiMeta.webfinger);
 
   router.get('/', webIndex.index);
+  router.get('/auth/login', enableSession, webAuth.showLogin);
+  router.post('/auth/login', enableSession, webAuth.tryLogin);
+  router.post('/auth/logout', enableSession, webAuth.logout);
+  router.get('/admin/(.*)', enableSession, )
 
   router.get('/users/:user', apiUser.checkUser, webIndex.maybeReturnHtml(webUser.user), apiUser.user);
   router.post('/users/:user/inbox', apiUser.checkUser, apiUser.inbox);

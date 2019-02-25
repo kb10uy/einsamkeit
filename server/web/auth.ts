@@ -38,7 +38,7 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
     context.redirect('/auth/login');
   }
 
-  context.session.user = user;
+  // context.session.user = user;
 }
 
 export async function logout(context: EinsamkeitContext): Promise<void> {}

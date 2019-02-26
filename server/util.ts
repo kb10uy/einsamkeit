@@ -1,7 +1,7 @@
 import { URL } from 'url';
 import * as path from 'path';
 import { ParameterizedContext } from 'koa';
-import { EinsamkeitState } from './types';
+import { EinsamkeitState, EinsamkeitContext } from './types';
 import * as log4js from 'log4js';
 import * as config from 'config';
 import * as Knex from 'knex';
@@ -127,6 +127,26 @@ export function setSuccess(ctx: ParameterizedContext<EinsamkeitState>, status: n
 export function setError(ctx: ParameterizedContext<EinsamkeitState>, status: number, body: unknown): void {
   ctx.response.status = status;
   ctx.response.body = body;
+}
+
+/**
+ * 現在のセッションに通常のフラッシュデータを追加する
+ * @param ctx context
+ * @param message 表示したいメッセージ
+ */
+export function addInformationFlash(ctx: EinsamkeitContext, message: string): void {
+  if (!ctx.session || !ctx.session.flash) return;
+  ctx.session.flash.info.push(message);
+}
+
+/**
+ * 現在のセッションにエラーのフラッシュデータを追加する
+ * @param ctx context
+ * @param message 表示したいメッセージ
+ */
+export function addErrorFlash(ctx: EinsamkeitContext, message: string): void {
+  if (!ctx.session || !ctx.session.flash) return;
+  ctx.session.flash.error.push(message);
 }
 
 /**

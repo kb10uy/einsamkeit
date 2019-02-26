@@ -19,6 +19,26 @@ export function maybeReturnHtml(jumpTo: EinsamkeitMiddleware): EinsamkeitMiddlew
 }
 
 /**
+ * フラッシュデータ (次の描画で一度だけ描画されるようなステータスメッセージなど) を有効にする。
+ * @param context
+ */
+export async function enableFlash(context: EinsamkeitContext, next: () => Promise<any>): Promise<void> {
+  if (context.session) {
+    if (!context.session.flash) {
+      context.session.flash = {
+        info: [],
+        error: [],
+      };
+    }
+    await next();
+    context.session.flash.info = [];
+    context.session.flash.error = [];
+  } else {
+    await next();
+  }
+}
+
+/**
  * GET /
  * @param context context
  */

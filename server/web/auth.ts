@@ -34,6 +34,7 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
   if (!username || !password) {
     addErrorFlash(context, '節穴アイか? input 要素ぐらいちゃんと見ろボケ');
     context.redirect('/auth/login');
+    return;
   }
 
   const [user] = await knex('users')
@@ -42,12 +43,14 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
   if (!user) {
     addErrorFlash(context, 'さてはアンチだなオメー');
     context.redirect('/auth/login');
+    return;
   }
 
   const matchesPassword = await bcrypt.compare(password, user.password_hash);
   if (!matchesPassword) {
     addErrorFlash(context, 'お?パスワード忘れたか?');
     context.redirect('/auth/login');
+    return;
   }
 
   context.session.user = user;

@@ -32,6 +32,7 @@ const bodyparser = KoaBodyParser({
 });
 const serveStatic = KoaStatic(path.resolve(process.cwd(), 'public'), {
   gzip: true,
+  maxage: 86400 * 1000,
 });
 
 application.keys = config.get<string[]>('encryptionKeys');

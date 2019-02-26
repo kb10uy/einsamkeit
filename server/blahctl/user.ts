@@ -112,12 +112,17 @@ export async function changePassword(): Promise<void> {
 
   const now = new Date();
   const passwordHash = await bcrypt.hash(password, 12);
-  await knex('users')
-    .where('id', localUser.id)
-    .update({
-      password_hash: passwordHash,
-      updated_at: now,
-    });
+  try {
+    await knex('users')
+      .where('id', localUser.id)
+      .update({
+        password_hash: passwordHash,
+        updated_at: now,
+      });
+  } catch (e) {
+    console.log(chalk.red(`Error: ${e.message}`));
+    process.exit(1);
+  }
 
   console.log(chalk.green('Password changed successfully!'));
   console.log(chalk.green(`The password hash is "${passwordHash}".`));

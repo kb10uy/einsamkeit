@@ -1,0 +1,26 @@
+.flash-box {
+  .flash {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+
+    i {
+      grid-column: 1;
+      font-size: 24pt;
+    }
+    span {
+      grid-column: 2;
+    }
+
+    &.info {
+      background-color: rgba(192, 255, 192, 0.5);
+      border: 1px solid #393;
+    }
+    &.error {
+      background-color: rgba(255, 192, 192, 0.5);
+      border: 1px solid #933;
+    }
+  }
+}

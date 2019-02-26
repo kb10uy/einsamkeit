@@ -1,0 +1,9 @@
+.flash-box
+  each info in flash.info
+    .flash.info
+      i.fas.fa-info
+      span #{info}
+  each error in flash.error
+    .flash.info
+      i.fas.fa-times
+      span #{info}

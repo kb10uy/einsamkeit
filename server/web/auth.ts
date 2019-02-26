@@ -38,10 +38,15 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
     context.redirect('/auth/login');
   }
 
-  // context.session.user = user;
+  context.session.user = user;
 }
 
-export async function logout(context: EinsamkeitContext): Promise<void> {}
+export async function logout(context: EinsamkeitContext): Promise<void> {
+  if (!context.session) throw new Error('Precondition failed');
+
+  context.session.user = undefined;
+  context.redirect('/');
+}
 
 export const sessionStore: stores = {
   async get(key, maxAge, { rolling }) {

@@ -27,6 +27,7 @@ export interface EinsamkeitSession {
   flash?: {
     info: string[];
     error: string[];
+    keep: boolean;
   };
 }
 

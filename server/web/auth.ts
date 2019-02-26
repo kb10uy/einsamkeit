@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { stores } from 'koa-session';
 import { EinsamkeitContext } from '../types';
-import { setSuccess, renderPug, getRedis, getKnex, addErrorFlash, addInformationFlash } from '../util';
+import { setSuccess, renderPug, getRedis, getKnex, addErrorFlash, addInformationFlash, keepFlash } from '../util';
 
 const knex = getKnex();
 const redis = getRedis();
@@ -33,6 +33,7 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
   const { username, password } = context.request.body;
   if (!username || !password) {
     addErrorFlash(context, '節穴アイか? input 要素ぐらいちゃんと見ろボケ');
+    keepFlash(context);
     context.redirect('/auth/login');
     return;
   }
@@ -42,13 +43,15 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
     .where('name', username);
   if (!user) {
     addErrorFlash(context, 'さてはアンチだなオメー');
-    context.redirect('/auth/login');
+    keepFlash(context);
+    context.redirect('back');
     return;
   }
 
   const matchesPassword = await bcrypt.compare(password, user.password_hash);
   if (!matchesPassword) {
     addErrorFlash(context, 'お?パスワード忘れたか?');
+    keepFlash(context);
     context.redirect('/auth/login');
     return;
   }
@@ -62,6 +65,7 @@ export async function logout(context: EinsamkeitContext): Promise<void> {
 
   context.session.user = undefined;
   addInformationFlash(context, 'またね〜');
+  keepFlash(context);
   context.redirect('/');
 }
 

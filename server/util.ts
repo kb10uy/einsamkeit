@@ -150,6 +150,15 @@ export function addErrorFlash(ctx: EinsamkeitContext, message: string): void {
 }
 
 /**
+ * 現在のフラッシュデータを次回のアクセスに持ち越す
+ * @param ctx context
+ */
+export function keepFlash(ctx: EinsamkeitContext): void {
+  if (!ctx.session || !ctx.session.flash) return;
+  ctx.session.flash.keep = true;
+}
+
+/**
  * このサーバーのフルURLを生成する
  * @param path パス
  */

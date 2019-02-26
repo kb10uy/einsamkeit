@@ -23,18 +23,25 @@ export function maybeReturnHtml(jumpTo: EinsamkeitMiddleware): EinsamkeitMiddlew
  * @param context
  */
 export async function enableFlash(context: EinsamkeitContext, next: () => Promise<any>): Promise<void> {
-  if (context.session) {
-    if (!context.session.flash) {
-      context.session.flash = {
-        info: [],
-        error: [],
-      };
-    }
+  if (!context.session) {
     await next();
+    return;
+  }
+
+  if (!context.session.flash) {
+    context.session.flash = {
+      info: [],
+      error: [],
+      keep: false,
+    };
+  }
+
+  await next();
+  if (context.session.flash.keep) {
+    context.session.flash.keep = false;
+  } else {
     context.session.flash.info = [];
     context.session.flash.error = [];
-  } else {
-    await next();
   }
 }
 

@@ -50,3 +50,8 @@ export async function index(context: EinsamkeitContext): Promise<void> {
     .limit(10);
   setSuccess(context, 200, renderPug('index.pug', { knownUsers }));
 }
+
+export async function admin(context: EinsamkeitContext): Promise<void> {
+  if (!context.session) throw new Error('Precondition failed');
+  setSuccess(context, 200, renderPug('index.pug', { flash: context.session.flash }));
+}

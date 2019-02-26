@@ -51,6 +51,7 @@ export async function tryLogin(context: EinsamkeitContext): Promise<void> {
   }
 
   context.session.user = user;
+  context.redirect('/admin/home');
 }
 
 export async function logout(context: EinsamkeitContext): Promise<void> {

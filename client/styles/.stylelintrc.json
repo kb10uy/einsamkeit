@@ -1,4 +1,8 @@
 {
   "extends": ["stylelint-config-recommended", "stylelint-config-recess-order"],
-  "plugins": ["stylelint-scss"]
+  "plugins": ["stylelint-scss"],
+  "rules": {
+    "max-empty-lines": 1,
+    "rule-empty-line-before": "always"
+  }
 }

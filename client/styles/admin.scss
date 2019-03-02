@@ -16,3 +16,19 @@ body {
   max-width: 1024px;
   margin: 0 auto;
 }
+
+.home-layout {
+  display: grid;
+  grid-template-rows: max-content max-content;
+  grid-template-columns: minmax(160px, 256px) 2fr;
+
+  .user-jumbotron {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .integrated-menu {
+    grid-row: 1 / 3;
+    grid-column: 1;
+  }
+}

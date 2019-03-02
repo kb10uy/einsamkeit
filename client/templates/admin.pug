@@ -2,11 +2,22 @@ extends layouts/admin.pug
 
 block body
   .container
-    h1 Home
-    .user-jumbotron
-      img.header(src=user.header, alt=user.display_name)
-      img.avatar(src=user.icon, alt=user.display_name)
-      .profile-background
-      .profile
-        .display-name #{user.display_name}
-        .screen-name @#{user.name}
+    .home-layout
+      .integrated-menu
+        .menu-item その1
+        .menu-item その2
+        .menu-item その3
+        .menu-item その4
+        .menu-item その5
+        .menu-item その6
+        .menu-item その7
+        .menu-item その8
+        .menu-item その9
+        .menu-item その10
+      .user-jumbotron
+        img.header(src=user.header, alt=user.display_name)
+        img.avatar(src=user.icon, alt=user.display_name)
+        .profile-background
+        .profile
+          .display-name #{user.display_name}
+          .screen-name @#{user.name}

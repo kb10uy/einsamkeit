@@ -5,5 +5,4 @@
     "typescript",
     "typescriptreact"
   ],
-  "eslint.autoFixOnSave": true,
 }

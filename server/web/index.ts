@@ -65,6 +65,7 @@ export async function admin(context: EinsamkeitContext): Promise<void> {
     200,
     renderPug('admin.pug', {
       flash: context.session.flash,
+      user: context.session.user,
       csrfToken: context.csrf,
     }),
   );

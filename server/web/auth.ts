@@ -8,9 +8,11 @@ const redis = getRedis();
 
 export async function checkAuthenticated(context: EinsamkeitContext, next: () => Promise<any>): Promise<void> {
   if (!context || !context.session) throw new Error('Precondition failed');
-  if (context.session.user === undefined) {
+  if (!context.session.user) {
     addErrorFlash(context, 'ログインしろボケナス');
+    keepFlash(context);
     context.redirect('/auth/login');
+    return;
   }
   await next();
 }

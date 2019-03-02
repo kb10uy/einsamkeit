@@ -31,7 +31,7 @@ export function defineRoutes(router: KoaRouter<EinsamkeitState>, enableSession: 
   router.get('/auth/login', enableSession, webIndex.enableFlash, webAuth.showLogin);
   router.post('/auth/login', enableSession, webIndex.enableFlash, webAuth.tryLogin);
   router.post('/auth/logout', enableSession, webIndex.enableFlash, webAuth.logout);
-  router.get('/admin/(.*)', enableSession, webIndex.enableFlash, webIndex.admin);
+  router.get('/admin/(.*)', enableSession, webIndex.enableFlash, webAuth.checkAuthenticated, webIndex.admin);
 
   // /id/* is reserved for ids
 }

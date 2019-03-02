@@ -15,3 +15,58 @@ body {
   max-width: 1024px;
   margin: 0 auto;
 }
+
+.user-jumbotron {
+  position: relative;
+  display: grid;
+  grid-template-rows: max-content max-content;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+
+  img.header {
+    z-index: -1;
+    grid-row: 1 / 3;
+    grid-column: 1 / 3;
+    width: 100%;
+    min-height: 192px;
+    object-fit: cover;
+    border: 2px solid #a63;
+    border-radius: 10px;
+  }
+
+  img.avatar {
+    z-index: 10;
+    grid-row: 2;
+    grid-column: 1;
+    width: 96px;
+    height: 96px;
+    margin: 10px;
+    background-color: #fff;
+    border: 2px solid #a63;
+    border-radius: 50%;
+  }
+
+  .profile-background {
+    z-index: 0;
+    grid-row: 2;
+    grid-column: 1 / 3;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent;
+    border-radius: 0px 0px 10px 10px;
+  }
+
+  .profile {
+    z-index: 10;
+    grid-row: 2;
+    grid-column: 2;
+
+    .display-name {
+      font-size: 20pt;
+    }
+
+    .screen-name {
+      font-size: 14pt;
+    }
+  }
+}

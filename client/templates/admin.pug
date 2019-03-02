@@ -3,3 +3,10 @@ extends layouts/admin.pug
 block body
   .container
     h1 Home
+    .user-jumbotron
+      img.header(src=user.header, alt=user.display_name)
+      img.avatar(src=user.icon, alt=user.display_name)
+      .profile-background
+      .profile
+        .display-name #{user.display_name}
+        .screen-name @#{user.name}

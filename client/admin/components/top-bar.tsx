@@ -30,12 +30,21 @@ const Logout = styled.a`
   }
 `;
 
-export default () => (
-  <Container>
-    <Logo>Einsamkeit</Logo>
-    <RightMenu>
-      <Logout href="#">フェイク</Logout>
-      <Logout href="#">ログアウト</Logout>
-    </RightMenu>
-  </Container>
-);
+function callLogout() {}
+
+export default () => {
+  const csrfMeta: HTMLMetaElement | null = document.querySelector('meta[name=csrf-token]');
+  const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') || '' : '';
+  return (
+    <Container>
+      <Logo>Einsamkeit</Logo>
+      <RightMenu>
+        <Logout href="#">フェイク</Logout>
+        <form action="/auth/logout" method="post">
+          <input type="hidden" name="_csrf" value={csrfToken} />
+          <Logout>ログアウト</Logout>
+        </form>
+      </RightMenu>
+    </Container>
+  );
+};

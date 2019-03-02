@@ -60,5 +60,12 @@ export async function index(context: EinsamkeitContext): Promise<void> {
 
 export async function admin(context: EinsamkeitContext): Promise<void> {
   if (!context.session) throw new Error('Precondition failed');
-  setSuccess(context, 200, renderPug('index.pug', { flash: context.session.flash }));
+  setSuccess(
+    context,
+    200,
+    renderPug('admin.pug', {
+      flash: context.session.flash,
+      csrfToken: context.csrf,
+    }),
+  );
 }

@@ -20,7 +20,7 @@ export function defineRoutes(router: KoaRouter<EinsamkeitState>, enableSession: 
   router.get('/auth/login', enableSession, webIndex.enableFlash, webAuth.showLogin);
   router.post('/auth/login', enableSession, webIndex.enableFlash, webAuth.tryLogin);
   router.post('/auth/logout', enableSession, webIndex.enableFlash, webAuth.logout);
-  router.get('/admin/(.*)', enableSession, webIndex.enableFlash);
+  router.get('/admin/(.*)', enableSession, webIndex.enableFlash, webIndex.admin);
 
   router.get('/users/:user', apiUser.checkUser, webIndex.maybeReturnHtml(webUser.user), apiUser.user);
   router.post('/users/:user/inbox', apiUser.checkUser, apiUser.inbox);

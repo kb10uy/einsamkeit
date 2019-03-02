@@ -7,7 +7,7 @@ const AutoPrefixer = require('autoprefixer');
 module.exports = {
   entry: {
     einsamkeit: ['./client/scripts/main.ts', './client/styles/main.scss'],
-    admin: './client/admin/admin.tsx',
+    admin: ['./client/admin/admin.tsx', './client/styles/admin.scss'],
   },
 
   output: {
@@ -68,7 +68,7 @@ module.exports = {
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'styles/einsamkeit.css',
+      filename: 'styles/[name].css',
     }),
     new CopyWebpackPlugin([
       {

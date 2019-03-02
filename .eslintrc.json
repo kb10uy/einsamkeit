@@ -1,19 +1,63 @@
 {
   "root": true,
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "parser": "@typescript-eslint/parser",
-  "extends": ["standard", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
+  "extends": [
+    "standard",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "env": {
     "node": true,
     "es6": true
   },
   "rules": {
-    "prettier/prettier": "error",
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "no-useless-escape": "off",
-    "no-control-regex": "off"
+    "no-control-regex": "off",
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 160
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "@typescript-eslint/indent": [
+      "error",
+      2
+    ],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ]
   },
   "parserOptions": {
     "sourceType": "module",
@@ -23,8 +67,15 @@
   },
   "overrides": [
     {
-      "files": ["tests/**/*.ts", "tests/**/*.tsx"],
-      "plugins": ["@typescript-eslint", "jest", "prettier"],
+      "files": [
+        "tests/**/*.ts",
+        "tests/**/*.tsx"
+      ],
+      "plugins": [
+        "@typescript-eslint",
+        "jest",
+        "prettier"
+      ],
       "env": {
         "jest": true
       },

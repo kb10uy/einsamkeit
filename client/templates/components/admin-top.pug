@@ -1,9 +1,12 @@
 .admin-top-bar
   span.logo Einsamkeit
   .menu.left
-    a(class="menu-item" href="/admin/") ホーム
-    a(class="menu-item" href="/admin/timeline") タイムライン
-    a(class="menu-item" href="/admin/notifications") 通知
-    a(class="menu-item" href="/admin/setting") 設定
+    a.menu-item(href="/admin/") ホーム
+    a.menu-item(href="/admin/timeline") タイムライン
+    a.menu-item(href="/admin/notifications") 通知
+    a.menu-item(href="/admin/settings") 設定
   .menu.right
+    form(action="/auth/logout", method="post")
+      input(type="hidden", name="_csrf", value=csrfToken)
+      button.menu-item ログアウト
 

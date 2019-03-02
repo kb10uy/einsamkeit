@@ -1,45 +1,17 @@
 @import '~bootstrap/scss/bootstrap-reboot';
 @import url('https://fonts.googleapis.com/css?family=Playball');
 
-.admin-top-bar {
-  display: grid;
-  grid-template-rows: 48px;
-  grid-template-columns: max-content max-content 1fr max-content;
-  align-items: center;
-  color: #fff;
-  background-color: rgb(255, 151, 66);
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.4));
+@import './admin/topbar';
 
-  .logo {
-    grid-column: 1;
-    margin: 0 10px;
-    font-family: 'Playball', serif;
-    font-size: 28pt;
+body {
+  background-color: #fed;
+
+  .admin-body {
+    margin: 10px;
   }
+}
 
-  .menu {
-    display: flex;
-    flex-direction: row;
-
-    .menu-item {
-      height: 48px;
-      padding: 0 10px;
-      line-height: 48px;
-      color: #fff;
-      text-decoration: none;
-      transition: 0.1s background-color;
-
-      &:hover {
-        background-color: rgba(150, 150, 150, 0.5);
-      }
-    }
-
-    &.left {
-      grid-column: 2;
-    }
-
-    &.right {
-      grid-column: 4;
-    }
-  }
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
 }

@@ -37,7 +37,7 @@ export async function webfinger(context: EinsamkeitContext): Promise<void> {
   } else if ((match = acctResource.exec(targetUri)) !== null) {
     username = match[1];
   } else {
-    setError(context, 404, `Invalid URI`);
+    setError(context, 404, 'Invalid URI');
     return;
   }
 

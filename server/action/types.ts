@@ -13,6 +13,8 @@ export const DbKeysUsers = [
   'name',
   'display_name',
   'icon',
+  'header',
+  'password_hash',
   'key_public',
   'key_private',
 ];

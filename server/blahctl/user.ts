@@ -35,6 +35,18 @@ export async function createUser(): Promise<void> {
     },
     {
       type: 'input',
+      name: 'headerUrl',
+      message: 'Header banner URL',
+      validate: (n: string) => n.length >= 10,
+    },
+    {
+      type: 'password',
+      name: 'password',
+      message: 'Enter a new password',
+      validate: (pw: string) => /[\x00-\x7f]{8,72}/.test(pw),
+    },
+    {
+      type: 'input',
       name: 'publicKeyFilename',
       message: 'Path to public key',
     },
@@ -48,12 +60,16 @@ export async function createUser(): Promise<void> {
   try {
     const pubkey = await promisify(fs.readFile)(answers.publicKeyFilename);
     const prvkey = await promisify(fs.readFile)(answers.privateKeyFilename);
+    const passwordHash = await bcrypt.hash(answers.password, 12);
     const now = new Date();
     await knex('users').insert({
       name: answers.username,
       display_name: answers.displayName,
       key_public: pubkey.toString(),
       key_private: prvkey.toString(),
+      icon: answers.iconUrl,
+      header: answers.headerUrl,
+      password_hash: passwordHash,
       created_at: now,
       updated_at: now,
     });

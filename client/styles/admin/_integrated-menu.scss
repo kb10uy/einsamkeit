@@ -1,0 +1,28 @@
+.integrated-menu {
+  background-color: #ffe;
+  border: 1px solid #666;
+  border-radius: 10px;
+
+  .menu-item {
+    box-sizing: content-box;
+    display: block;
+    padding: 10px;
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.2s;
+
+    &:first-child {
+      border-radius: 10px 10px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 10px 10px;
+    }
+
+    &:hover {
+      padding-left: 30px;
+      color: rgb(34, 112, 60);
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
+}

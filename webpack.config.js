@@ -7,7 +7,7 @@ const AutoPrefixer = require('autoprefixer');
 module.exports = {
   entry: {
     einsamkeit: ['./client/scripts/main.ts', './client/styles/main.scss'],
-    admin: ['./client/admin/admin.tsx', './client/styles/admin.scss'],
+    // admin: ['./client/admin/admin.tsx', './client/styles/admin.scss'],
   },
 
   output: {

@@ -20,9 +20,10 @@ block body
           .profile
             .display-name #{user.display_name}
             .screen-name @#{user.name}
-            .new-blah
-              textarea.content(name="content", cols="50", rows="10", placeholder="Blah blah blah...", required)
-              button.submit ぼやく
+        .new-blah
+          img.avatar(src=user.icon, alt=user.display_name)
+          textarea.content(name="content", cols="50", rows="10", placeholder="Blah blah blah...", required)
+          button.submit ぼやく
 
         .blahs
           //- each する

@@ -39,5 +39,68 @@
         color: #555;
       }
     }
+
+    .actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+
+      a {
+        position: relative;
+        margin-right: 0.5em;
+        color: #888;
+        text-decoration: none;
+        transition: 0.2s all;
+
+        i.fas {
+          margin-right: 0.5em;
+        }
+
+        &.reply {
+          &:hover {
+            color: rgb(43, 117, 255);
+          }
+
+          &::after {
+            background-color: rgb(170, 221, 255);
+          }
+        }
+
+        &.secondhand {
+          &:hover {
+            color: rgb(101, 218, 24);
+          }
+
+          &::after {
+            background-color: rgb(194, 255, 170);
+          }
+        }
+
+        &.favorite {
+          &:hover {
+            color: rgb(235, 201, 11);
+          }
+
+          &::after {
+            background-color: rgb(255, 225, 170);
+          }
+        }
+
+        &::after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          width: 0%;
+          height: 100%;
+          content: '';
+          transition: 0.2s all;
+        }
+
+        &:hover::after {
+          width: 100%;
+        }
+      }
+    }
   }
 }

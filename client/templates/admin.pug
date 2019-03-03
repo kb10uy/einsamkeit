@@ -32,8 +32,9 @@ block body
               img.avatar(src=user.icon, alt=user.display_name)
             .right
               .name
-                | #{user.display_name}
-                small @#{user.name}
+                span.display-name #{user.display_name}
+                span.screen-name @#{user.name}
+              .date 2019/03/03 12:00:00
               .text
                 | 投稿欄このスペースに入れてみたけど拡張しづらそうだし外に出したほうが良さそう
                 br

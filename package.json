@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode development",
+    "build:production": "webpack --mode production",
     "watch": "webpack --mode development --watch",
     "blahctl": "ts-node -D 7016 -P ./tsconfig.json ./server/blahctl.ts",
     "server:web": "ts-node -D 7016 -P ./tsconfig.json ./server/web.ts",

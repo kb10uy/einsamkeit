@@ -66,7 +66,7 @@ export async function admin(context: EinsamkeitContext): Promise<void> {
   const timeline = (await fetchHomeTimeline(context.session.user.id || 0, 100))
     .map((n: any) => ({
       ...n,
-      created_at: datefns.format(n.created_at, 'YYYY/MM/DD HH:mm:SS'),
+      created_at: datefns.format(n.created_at, 'YYYY/MM/DD HH:mm:ss'),
     }));
 
   setSuccess(

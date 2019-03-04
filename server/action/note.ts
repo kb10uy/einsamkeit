@@ -44,9 +44,64 @@ export async function registerRemoteNote(noteObject: any, remoteUser: DbObject):
     remote_note_id: inserted.id,
   })));
 
+  const emojiTags = (noteObject.tag || []).filter((t: any) => t.type === 'Emoji');
+  const emojis = await fetchRemoteEmojis(emojiTags);
+  await knex('remote_notes_remote_emojis').insert(emojis.map((e) => ({
+    remote_note_id: inserted.id,
+    remote_emoji_id: e.id,
+  })));
+
   return inserted;
 }
 
+/**
+ * 指定した Emoji tag を取得する。
+ *
+ * @export
+ * @param {*} emojiTag
+ * @returns {Promise<DbObject>}
+ */
+export async function fetchRemoteEmojis(emojiTags: any[]): Promise<DbObject[]> {
+  const emojiIds: string[] = emojiTags.map((t: any) => t.id);
+  const knownEmojis: DbObject[] = await knex('remote_emojis')
+    .select()
+    .whereIn('emoji_id', emojiIds);
+  const unknownTags = emojiTags.filter((t) => knownEmojis.every((ke) => ke.emoji_id !== t));
+  const registeredEmojis = await Promise.all(unknownTags.map(async (t: any) => registerRemoteEmoji(t)));
+
+  return knownEmojis.concat(registeredEmojis);
+}
+
+/**
+ * リモートの絵文字を登録する
+ *
+ * @export
+ * @param {*} emojiTag type: Emoji である tag 要素
+ * @returns {Promise<DbObject>}
+ */
+export async function registerRemoteEmoji(emojiTag: any): Promise<DbObject> {
+  // TODO: 複数登録できるようにすべき？
+
+  const now = new Date();
+  const [inserted] = await knex('remote_emojis').insert({
+    name: emojiTag.name,
+    emoji_id: emojiTag.id,
+    url: emojiTag.icon.url,
+    created_at: now,
+    updated_at: now,
+  }, '*');
+
+  return inserted;
+}
+
+/**
+ * ホームタイムラインを取得する。
+ *
+ * @export
+ * @param {number} localUserId
+ * @param {number} length
+ * @returns {Promise<any[]>}
+ */
 export async function fetchHomeTimeline(localUserId: number, length: number): Promise<any[]> {
   let remoteIds = await redis.lrange(`timeline-remote:${localUserId}`, -length, -1);
   if (!remoteIds) remoteIds = await cacheHomeTimelineIds(localUserId, length);

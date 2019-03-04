@@ -41,13 +41,18 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
   let remoteIds = await redis.lrange(`timeline-remote:${localUserId}`, -length, -1);
   if (!remoteIds) remoteIds = await cacheHomeTimelineIds(localUserId, length);
 
+  const userJsonAggregation = ['id', 'user_id', 'name', 'display_name', 'icon']
+    .map((c) => `'${c}', remote_users.${c}`)
+    .join(',');
   const remoteNotes = await knex('remote_notes')
+    .join('remote_users', 'remote_notes.remote_user_id', 'remote_users.id')
     .leftJoin('remote_media', 'remote_notes.id', 'remote_media.remote_note_id')
     .select(
       'remote_notes.id as id',
       'remote_notes.object_id as object_id',
       'remote_notes.body_html as body_html',
       knex.raw('json_agg(remote_media.url) as media'),
+      knex.raw(`json_agg(json_build_object(${userJsonAggregation})) as user`),
     )
     .whereIn('remote_notes.id', remoteIds)
     .orderBy('remote_notes.created_at', 'desc')
@@ -57,6 +62,7 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
   return remoteNotes.map((n: any) => ({
     ...n,
     media: n.media.filter((m: any) => m),
+    user: n.user[0],
   }));
 }
 

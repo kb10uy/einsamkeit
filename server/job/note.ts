@@ -25,15 +25,17 @@ export async function receiveNote(job: ReceiveNoteJob): Promise<void> {
   if (note) {
     // 重複受取
   } else {
-    await registerRemoteNote(job.object, remoteUser);
+    const note = await registerRemoteNote(job.object, remoteUser);
+    logger.info(`Stored remote note ${note.object_id}`);
 
     // TODO: ここもキャッシュ化するべき？
     const targetLocalUsers = await knex('users')
-      .select('id', 'name')
+      .select('users.id as id', 'users.name as name')
       .join('followings', 'users.id', 'followings.local_user_id')
       .where('followings.remote_user_id', remoteUser.id);
     for (const user of targetLocalUsers) {
       await redis.lpush(`timeline-remote:${user.id}`, note.id);
+      logger.info(`Pushed into ${user.name}'s timeline`);
     }
   }
 }

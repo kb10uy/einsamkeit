@@ -42,7 +42,7 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
   if (!remoteIds) remoteIds = await cacheHomeTimelineIds(localUserId, length);
 
   const remoteNotes = await knex('remote_notes')
-    .join('remote_media', 'remote_notes.id', 'remote_media.remote_note_id')
+    .leftJoin('remote_media', 'remote_notes.id', 'remote_media.remote_note_id')
     .select(
       'remote_notes.id as id',
       'remote_notes.object_id as object_id',
@@ -50,10 +50,14 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
       knex.raw('json_agg(remote_media.url) as media'),
     )
     .whereIn('remote_notes.id', remoteIds)
-    .orderBy('remote_notes.created_at', 'desc');
+    .orderBy('remote_notes.created_at', 'desc')
+    .groupBy('remote_notes.id', 'remote_notes.object_id', 'remote_notes.body_html');
   // TODO: 自分の投稿をマージする
 
-  return remoteNotes;
+  return remoteNotes.map((n: any) => ({
+    ...n,
+    media: n.media.filter((m: any) => m),
+  }));
 }
 
 /**

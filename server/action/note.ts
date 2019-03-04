@@ -1,5 +1,6 @@
 import { getLogger, getKnex, getRedis } from '../util';
 import { DbObject } from './types';
+import * as twemoji from 'twemoji';
 
 const knex = getKnex();
 const redis = getRedis();
@@ -143,9 +144,11 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
     ...n,
     media: n.media.filter((m: any) => m && m.type),
     user: n.user[0],
-    body_html: n.emojis
-      .filter((e: any) => e && e.name)
-      .reduce((last: string, emoji: any) => last.replace(emoji.name, `<img src="${emoji.url}" alt="${emoji.name}" class="emoji custom">`), n.body_html),
+    body_html: twemoji.parse(
+      n.emojis
+        .filter((e: any) => e && e.name)
+        .reduce((last: string, emoji: any) => last.replace(emoji.name, `<img src="${emoji.url}" alt="${emoji.name}" class="emoji custom">`), n.body_html)
+    ),
   }));
 }
 

@@ -1,6 +1,8 @@
 import { EinsamkeitContext, EinsamkeitMiddleware } from '../types';
 import { setSuccess, renderPug, getKnex } from '../util';
 import { DbObject } from '../action/types';
+import { fetchHomeTimeline } from '../action/note';
+import * as datefns from 'date-fns';
 
 const knex = getKnex();
 
@@ -59,7 +61,14 @@ export async function index(context: EinsamkeitContext): Promise<void> {
 }
 
 export async function admin(context: EinsamkeitContext): Promise<void> {
-  if (!context.session) throw new Error('Precondition failed');
+  if (!context.session || !context.session.user) throw new Error('Precondition failed');
+
+  const timeline = (await fetchHomeTimeline(context.session.user.id || 0, 100))
+    .map((n: any) => ({
+      ...n,
+      created_at: datefns.format(n.created_at, 'YYYY/MM/DD HH:mm:SS'),
+    }));
+
   setSuccess(
     context,
     200,
@@ -67,6 +76,7 @@ export async function admin(context: EinsamkeitContext): Promise<void> {
       flash: context.session.flash,
       user: context.session.user,
       csrfToken: context.csrf,
+      timeline,
     }),
   );
 }

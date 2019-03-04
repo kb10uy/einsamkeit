@@ -37,22 +37,23 @@ export async function registerRemoteNote(noteObject: any, remoteUser: DbObject):
   return inserted;
 }
 
-export async function fetchHomeTimeline(localUserId: number, length: number): Promise<any> {
+export async function fetchHomeTimeline(localUserId: number, length: number): Promise<any[]> {
   let remoteIds = await redis.lrange(`timeline-remote:${localUserId}`, -length, -1);
   if (!remoteIds) remoteIds = await cacheHomeTimelineIds(localUserId, length);
 
-  const userJsonAggregation = ['id', 'user_id', 'name', 'display_name', 'icon']
-    .map((c) => `'${c}', remote_users.${c}`)
-    .join(',');
+  const userJsonAggregation = ['id', 'user_id', 'name', 'display_name', 'icon'].map((c) => `'${c}', remote_users.${c}`);
+  userJsonAggregation.push('\'domain\', servers.domain');
   const remoteNotes = await knex('remote_notes')
     .join('remote_users', 'remote_notes.remote_user_id', 'remote_users.id')
+    .join('servers', 'servers.id', 'remote_users.server_id')
     .leftJoin('remote_media', 'remote_notes.id', 'remote_media.remote_note_id')
     .select(
       'remote_notes.id as id',
       'remote_notes.object_id as object_id',
       'remote_notes.body_html as body_html',
+      'remote_notes.created_at as created_at',
       knex.raw('json_agg(remote_media.url) as media'),
-      knex.raw(`json_agg(json_build_object(${userJsonAggregation})) as user`),
+      knex.raw(`json_agg(json_build_object(${userJsonAggregation.join(',')})) as user`),
     )
     .whereIn('remote_notes.id', remoteIds)
     .orderBy('remote_notes.created_at', 'desc')

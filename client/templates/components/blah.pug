@@ -6,7 +6,7 @@ mixin blah(note)
       .name
         span.display-name #{note.user.display_name}
         span.screen-name @#{note.user.name}@#{note.user.domain}
-      a.date(href=note.object_id) 2019/03/03 12:00:00
+      a.date(href=note.object_id) #{note.created_at}
       .text
         | !{note.body_html}
       .actions

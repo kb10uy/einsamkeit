@@ -91,6 +91,7 @@ export async function registerRemoteEmoji(emojiTag: any): Promise<DbObject> {
     updated_at: now,
   }, '*');
 
+  logger.info(`Emoji ${emojiTag.id} registered #${inserted.id}`);
   return inserted;
 }
 
@@ -112,6 +113,8 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
     .join('remote_users', 'remote_notes.remote_user_id', 'remote_users.id')
     .join('servers', 'servers.id', 'remote_users.server_id')
     .leftJoin('remote_media', 'remote_notes.id', 'remote_media.remote_note_id')
+    .leftJoin('remote_notes_remote_emojis', 'remote_notes.id', 'remote_notes_remote_emojis.remote_note_id')
+    .leftJoin('remote_emojis', 'remote_notes_remote_emojis.remote_emoji_id', 'remote_emojis.id')
     .select(
       'remote_notes.id as id',
       'remote_notes.object_id as object_id',
@@ -121,6 +124,7 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
       'remote_notes.is_sensitive as is_sensitive',
       'remote_notes.warning_text as warning_text',
       knex.raw('json_agg(json_build_object(\'type\', remote_media.type, \'url\', remote_media.url)) as media'),
+      knex.raw('json_agg(json_build_object(\'name\', remote_emojis.name, \'url\', remote_emojis.url)) as emojis'),
       knex.raw(`json_agg(json_build_object(${userJsonAggregation.join(',')})) as user`),
     )
     .whereIn('remote_notes.id', remoteIds)
@@ -139,6 +143,9 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
     ...n,
     media: n.media.filter((m: any) => m && m.type),
     user: n.user[0],
+    body_html: n.emojis
+      .filter((e: any) => e && e.name)
+      .reduce((last: string, emoji: any) => last.replace(emoji.name, `<img src="${emoji.url}" alt="${emoji.name}" class="emoji custom">`), n.body_html),
   }));
 }
 

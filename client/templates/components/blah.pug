@@ -12,8 +12,11 @@ mixin blah(note)
       .text(data-toggle=note.id, class=(note.warning_text ? 'hidden' : ''))
         | !{note.body_html}
       .media
-        each mediaUrl in note.media
-          a(href=mediaUrl, class=(note.is_sensitive ? 'sensitive' : '')) #[img(src=mediaUrl, alt=mediaUrl)]
+        each media in note.media
+          if (media.type.startsWith('video/'))
+            video(src=media.url, preload='metadata', class=(note.is_sensitive ? 'sensitive' : ''))
+          else
+            a(href=media.url, class=(note.is_sensitive ? 'sensitive' : '')) #[img(src=media.url, alt=media.url)]
       .actions
         a.reply(href="#")
           i.fas.fa-reply

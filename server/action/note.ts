@@ -65,7 +65,7 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
       'remote_notes.is_public as is_public',
       'remote_notes.is_sensitive as is_sensitive',
       'remote_notes.warning_text as warning_text',
-      knex.raw('json_agg(remote_media.url) as media'),
+      knex.raw('json_agg(json_build_object(\'type\', remote_media.type, \'url\', remote_media.url)) as media'),
       knex.raw(`json_agg(json_build_object(${userJsonAggregation.join(',')})) as user`),
     )
     .whereIn('remote_notes.id', remoteIds)
@@ -82,7 +82,7 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
 
   return remoteNotes.map((n: any) => ({
     ...n,
-    media: n.media.filter((m: any) => m),
+    media: n.media.filter((m: any) => m && m.type),
     user: n.user[0],
   }));
 }

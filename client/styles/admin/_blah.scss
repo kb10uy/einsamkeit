@@ -95,6 +95,16 @@
       grid-row: 4;
       grid-column: 1 / 3;
 
+      video {
+        position: relative;
+        display: block;
+        max-width: 960px;
+        max-height: 128px;
+        margin-right: 10px;
+        overflow: hidden;
+        border-radius: 10px;
+      }
+
       a {
         position: relative;
         display: block;

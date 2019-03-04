@@ -34,3 +34,5 @@ export const DbKeysServers = ['id', 'created_at', 'updated_at', 'scheme', 'domai
 export const DbKeysFollowings = ['id', 'created_at', 'updated_at', 'local_user_id', 'remote_user_id'];
 export const DbKeysFollowers = ['id', 'created_at', 'updated_at', 'local_user_id', 'remote_user_id'];
 export const DbKeysPendingFollows = ['id', 'created_at', 'updated_at', 'local_user_id', 'remote_user_id'];
+export const DbKeysRemoteNotes = ['id', 'created_at', 'updated_at', 'object_id', 'remote_user_id', 'body_html', 'is_public'];
+export const DbKeysRemoteMedia = ['id', 'created_at', 'updated_at', 'type', 'url'];

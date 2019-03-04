@@ -56,3 +56,26 @@ export async function processUndoActivity(body: any): Promise<void> {
       break;
   }
 }
+
+/**
+ * Create Activity
+ *
+ * @export
+ * @param {*} body
+ * @returns {Promise<void>}
+ */
+export async function processCreateActivity(body: any): Promise<void> {
+  if (typeof body.object !== 'object') throw new Error('The object of Create Activity is not an object');
+  switch (body.object.type) {
+    case 'Note':
+      await queue.add({
+        type: 'receiveNote',
+        actor: body.actor,
+        object: body.object,
+      });
+      break;
+    default:
+      logger.info(`Undo ${body.object.type} is unsupported`);
+      break;
+  }
+}

@@ -42,6 +42,12 @@ export interface ReceiveUnfollowJob extends JobBase {
   actor: any;
 }
 
+export interface ReceiveNoteJob extends JobBase {
+  type: 'receiveNote';
+  object: any;
+  actor: any;
+}
+
 export interface AcceptedFollowJob extends JobBase {
   type: 'acceptedFollow';
   object: any;
@@ -55,4 +61,5 @@ export type EinsamkeitJob =
   | SendUndoJob
   | ReceiveFollowJob
   | ReceiveUnfollowJob
+  | ReceiveNoteJob
   | AcceptedFollowJob;

@@ -3,6 +3,7 @@ import * as Queue from 'bull';
 import { getQueue, getLogger } from './util';
 import { EinsamkeitJob } from './job/types';
 import * as jobUser from './job/user';
+import * as jobNote from './job/note';
 import * as jobGeneral from './job/general';
 
 const concurrency = config.get<number>('queue.concurrency');
@@ -31,6 +32,9 @@ worker.process(concurrency, async (job: Queue.Job<EinsamkeitJob>) => {
         break;
       case 'receiveUnfollow':
         await jobUser.receiveUnfollow(job.data);
+        break;
+      case 'receiveNote':
+        await jobNote.receiveNote(job.data);
         break;
 
       case 'acceptedFollow':

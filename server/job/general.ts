@@ -1,12 +1,15 @@
 import { ProcessInboxJob } from './types';
 import { getLogger } from '../util';
-import { processAcceptActivity, processFollowActivity, processUndoActivity } from '../ap/activity';
+import { processAcceptActivity, processFollowActivity, processUndoActivity, processCreateActivity } from '../ap/activity';
 
 const logger = getLogger();
 
 export async function processInboxActivity(data: ProcessInboxJob): Promise<void> {
   const { body } = data;
   switch (body.type) {
+    case 'Create':
+      await processCreateActivity(body);
+      break;
     case 'Accept':
       await processAcceptActivity(body);
       break;
@@ -15,6 +18,9 @@ export async function processInboxActivity(data: ProcessInboxJob): Promise<void>
       break;
     case 'Undo':
       await processUndoActivity(body);
+      break;
+    default:
+      logger.info(`${body.type} Activity is unsupported`);
       break;
   }
   logger.info(`received: ${JSON.stringify(body)}`);

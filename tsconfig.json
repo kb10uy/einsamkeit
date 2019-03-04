@@ -5,6 +5,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2018", "dom.iterable", "dom"],
-    "jsx": "react"
+    "jsx": "react",
   },
 }

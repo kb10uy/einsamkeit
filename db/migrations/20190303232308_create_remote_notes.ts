@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
   });
   await knex.schema.createTable('remote_media', (table) => {
     table.increments();
-    table.integer('remote_note_id').unique().notNullable();
+    table.integer('remote_note_id').notNullable();
     table.string('type', 128).nullable();
     table.text('url').notNullable();
   });

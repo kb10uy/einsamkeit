@@ -9,6 +9,9 @@ mixin blah(note)
       a.date(href=note.object_id) #{note.created_at}
       .text
         | !{note.body_html}
+      .media
+        each mediaUrl in note.media
+          a(href=mediaUrl) #[img(src=mediaUrl, alt=mediaUrl)]
       .actions
         a.reply(href="#")
           i.fas.fa-reply

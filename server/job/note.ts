@@ -26,6 +26,8 @@ export async function receiveNote(job: ReceiveNoteJob): Promise<void> {
     // 重複受取
   } else {
     await registerRemoteNote(job.object, remoteUser);
+
+    // TODO: ここもキャッシュ化するべき？
     const targetLocalUsers = await knex('users')
       .select('id', 'name')
       .join('followings', 'users.id', 'followings.local_user_id')

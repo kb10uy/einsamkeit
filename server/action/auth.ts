@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import { createSign, createVerify } from 'crypto';
 import { getLogger } from '../util';
 import { fetchRemoteUserByKeyId } from './user';
-import { URL } from 'url';
 
 const logger = getLogger();
 
@@ -53,7 +52,7 @@ export async function verifyHttpSignature(headers: { [x: string]: string }, requ
   // 署名検証するヘッダを全部取ってくる
   const h = signatureProps.get('headers');
   if (!h) {
-    logger.warn(`HTTP Signature without headers property`);
+    logger.warn('HTTP Signature without headers property');
     return false;
   }
   const headersToVerify = h.split(' ').filter((hn) => hn);

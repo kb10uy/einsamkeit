@@ -1,7 +1,8 @@
-import { getLogger, getKnex } from '../util';
+import { getLogger, getKnex, getRedis } from '../util';
 import { DbObject } from './types';
 
 const knex = getKnex();
+const redis = getRedis();
 const logger = getLogger();
 
 /**
@@ -34,4 +35,47 @@ export async function registerRemoteNote(noteObject: any, remoteUser: DbObject):
   })));
 
   return inserted;
+}
+
+export async function fetchHomeTimeline(localUserId: number, length: number): Promise<any> {
+  let remoteIds = await redis.lrange(`timeline-remote:${localUserId}`, -length, -1);
+  if (!remoteIds) remoteIds = await cacheHomeTimelineIds(localUserId, length);
+
+  const remoteNotes = await knex('remote_notes')
+    .join('remote_media', 'remote_notes.id', 'remote_media.remote_note_id')
+    .select(
+      'remote_notes.id as id',
+      'remote_notes.object_id as object_id',
+      'remote_notes.body_html as body_html',
+      knex.raw('json_agg(remote_media.url) as media'),
+    )
+    .whereIn('remote_notes.id', remoteIds)
+    .orderBy('remote_notes.created_at', 'desc');
+  // TODO: 自分の投稿をマージする
+
+  return remoteNotes;
+}
+
+/**
+ * タイムラインキャッシュを構築し、その結果を返す。
+ *
+ * @export
+ * @param {number} localUserId 構築したいユーザーの ID
+ * @param {number} length 長さ
+ * @returns {Promise<number[]>}
+ */
+export async function cacheHomeTimelineIds(localUserId: number, length: number): Promise<number[]> {
+  const remoteNotes = await knex('remote_notes')
+    .select('id', 'object_id')
+    .whereIn(
+      'remote_user_id',
+      knex('followings')
+        .select('remote_user_id')
+        .where('local_user_id', localUserId)
+    )
+    .orderBy('created_at', 'desc');
+
+  const ids = remoteNotes.map((n: any) => n.id);
+  await redis.lpush(`timeline-remote:${localUserId}`, ...ids);
+  return ids;
 }

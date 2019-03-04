@@ -20,10 +20,20 @@ export async function registerRemoteNote(noteObject: any, remoteUser: DbObject):
   const now = new Date();
   const published = new Date(noteObject.published);
 
+  // TODO: public 判定は Note.audience も含めるべき？
+  const targets = ((noteObject.to || []) as string[]).concat((noteObject.cc || []));
+  const isPublic = targets.includes('https://www.w3.org/ns/activitystreams#Public') ||
+    targets.includes('as:Public') ||
+    targets.includes('Public') ||
+    false;
+
   const [inserted] = await knex('remote_notes').insert({
     object_id: noteObject.id,
     remote_user_id: remoteUser.id,
     body_html: noteObject.content,
+    warning_text: noteObject.summary || null,
+    is_sensitive: noteObject.sensitive || false,
+    is_public: isPublic,
     created_at: published,
     updated_at: now,
   }, '*');

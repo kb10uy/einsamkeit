@@ -7,6 +7,8 @@ export async function up(knex: Knex): Promise<void> {
     table.integer('remote_user_id').notNullable();
     table.text('body_html').notNullable();
     table.boolean('is_public').notNullable().defaultTo(true);
+    table.boolean('is_sensitive').notNullable().defaultTo(false);
+    table.text('warning_text').nullable();
     table.timestamps();
   });
   await knex.schema.createTable('remote_media', (table) => {

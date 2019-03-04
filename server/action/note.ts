@@ -62,12 +62,22 @@ export async function fetchHomeTimeline(localUserId: number, length: number): Pr
       'remote_notes.object_id as object_id',
       'remote_notes.body_html as body_html',
       'remote_notes.created_at as created_at',
+      'remote_notes.is_public as is_public',
+      'remote_notes.is_sensitive as is_sensitive',
+      'remote_notes.warning_text as warning_text',
       knex.raw('json_agg(remote_media.url) as media'),
       knex.raw(`json_agg(json_build_object(${userJsonAggregation.join(',')})) as user`),
     )
     .whereIn('remote_notes.id', remoteIds)
     .orderBy('remote_notes.created_at', 'desc')
-    .groupBy('remote_notes.id', 'remote_notes.object_id', 'remote_notes.body_html');
+    .groupBy(
+      'remote_notes.id',
+      'remote_notes.object_id',
+      'remote_notes.body_html',
+      'remote_notes.is_public',
+      'remote_notes.is_sensitive',
+      'remote_notes.warning_text',
+    );
   // TODO: 自分の投稿をマージする
 
   return remoteNotes.map((n: any) => ({

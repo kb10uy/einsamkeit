@@ -7,18 +7,21 @@ mixin blah(note)
         span.display-name #{note.user.display_name}
         span.screen-name @#{note.user.name}@#{note.user.domain}
       a.date(href=note.object_id) #{note.created_at}
-      .text
+      if note.warning_text
+        .warning #{note.warning_text} #[button.toggle(data-toggle=note.id) 表示]
+      .text(data-toggle=note.id, class=(note.warning_text ? 'hidden' : ''))
         | !{note.body_html}
       .media
         each mediaUrl in note.media
-          a(href=mediaUrl) #[img(src=mediaUrl, alt=mediaUrl)]
+          a(href=mediaUrl, class=(note.is_sensitive ? 'sensitive' : '')) #[img(src=mediaUrl, alt=mediaUrl)]
       .actions
         a.reply(href="#")
           i.fas.fa-reply
           | 首を突っ込む
-        a.secondhand(href="#")
-          i.fas.fa-retweet
-          | 受け売り
+        if note.is_public
+          a.secondhand(href="#")
+            i.fas.fa-retweet
+            | 受け売り
         a.favorite(href="#")
           i.fas.fa-star
           | 好意

@@ -1,4 +1,5 @@
 extends layouts/admin.pug
+include components/blah.pug
 
 block body
   .container
@@ -26,27 +27,5 @@ block body
           button.submit ぼやく
 
         .blahs
-          //- each する
-          each _ in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-            .blah
-              .left
-                img.avatar(src=user.icon, alt=user.display_name)
-              .right
-                .name
-                  span.display-name #{user.display_name}
-                  span.screen-name @#{user.name}
-                .date 2019/03/03 12:00:00
-                .text
-                  | 投稿欄このスペースに入れてみたけど拡張しづらそうだし外に出したほうが良さそう
-                  br
-                  | kb10uyのdotfiles公開したいけど一部にパスワード類が含まれているので厳しい(分離しろ)
-                .actions
-                  a.reply(href="#")
-                    i.fas.fa-reply
-                    | 首を突っ込む
-                  a.secondhand(href="#")
-                    i.fas.fa-retweet
-                    | 受け売り
-                  a.favorite(href="#")
-                    i.fas.fa-star
-                    | 好意
+          each note in timeline
+            +blah(note)

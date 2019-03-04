@@ -1,0 +1,21 @@
+mixin blah(note)
+  .blah
+    .left
+      img.avatar(src=note.user.icon, alt=note.user.display_name)
+    .right
+      .name
+        span.display-name #{note.user.display_name}
+        span.screen-name @#{note.user.name}@#{note.user.domain}
+      a.date(href=note.object_id) 2019/03/03 12:00:00
+      .text
+        | !{note.body_html}
+      .actions
+        a.reply(href="#")
+          i.fas.fa-reply
+          | 首を突っ込む
+        a.secondhand(href="#")
+          i.fas.fa-retweet
+          | 受け売り
+        a.favorite(href="#")
+          i.fas.fa-star
+          | 好意
